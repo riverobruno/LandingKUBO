@@ -1,6 +1,6 @@
 # Frontend Project Rules
 
-These rules are mandatory guidance for frontend contributors. Read this file before implementing frontend functionality in `frontend/`.
+These rules are mandatory guidance for frontend contributors. Read this file before implementing frontend functionality in `Front/`.
 
 ## Scope
 
