@@ -1,0 +1,28 @@
+schema: spec-driven
+
+context: |
+  KUBO is an AI-powered web application that turns a furniture idea into a project ready for quotation and manufacturing. The landing experience introduces KUBO and attracts potential customers from a broad public audience. All product-facing UI and copy must be Spanish-only; OpenSpec technical artifacts must be written in English.
+
+  Scope covers the full planned LandingKUBO system. Clearly distinguish implemented capabilities from planned backend or infrastructure work. Do not infer or select backend, database, deployment, or infrastructure technologies unless an approved change defines them.
+
+  The only implemented application is an early/starter frontend under Front/, using npm, React 19, TypeScript 6, Vite 8, and Tailwind CSS 4. Front/rules.md defines mandatory frontend target conventions, including centralized routing and layouts, feature-oriented pages and components, isolated native-fetch API calls, memory-only access tokens with backend-managed HttpOnly refresh cookies, Tailwind-first UI, and @/ imports. These conventions are not evidence that the corresponding dependencies, configuration, folders, authentication, API layer, backend, or infrastructure already exist.
+
+  No automated test framework or formatter is configured. Do not require automated tests until a test runner is introduced by an approved change. Current frontend verification is: cd Front && npm run build, then cd Front && npm run lint.
+
+rules:
+  proposal:
+    - State the user or business outcome, scope, and explicit non-goals without inventing product requirements.
+    - Identify whether each affected capability exists today or is planned, especially for backend and infrastructure work.
+  specs:
+    - Express requirements as observable behavior and include testable Given/When/Then scenarios for every requirement.
+    - Keep product-facing behavior Spanish-only while writing the specification itself in English.
+    - Do not prescribe implementation details unless they are project constraints or required for observable behavior.
+  design:
+    - Ground current-state claims in repository evidence and label unimplemented conventions or system areas as target state.
+    - For frontend changes, follow Front/rules.md and explain any necessary deviation; do not invent backend or infrastructure technologies.
+    - Address security boundaries when authentication, browser storage, cookies, API transport, or secrets are affected.
+  tasks:
+    - Organize tasks into small, dependency-ordered, verifiable implementation units with concrete file or area references.
+    - Include cd Front && npm run build and cd Front && npm run lint when frontend files are affected.
+    - Do not require automated tests unless the change first introduces and configures a test runner.
+    - Do not add formatter steps while no formatter is configured.
