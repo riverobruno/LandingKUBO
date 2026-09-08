@@ -1,0 +1,129 @@
+export interface DemoStep {
+  number: number
+  label: string
+  status: string
+  currentStatus: string
+}
+
+export type DemoStepNumber = 1 | 2 | 3 | 4
+
+export interface DemoDimension {
+  label: string
+  value: string
+}
+
+export interface DemoDesign {
+  title: string
+  status: string
+  downloadFilename: string
+  description: string
+  steps: DemoStep[]
+  currentStep: DemoStepNumber
+  version: string
+  prompt: DemoPrompt
+  progress: DemoProgressCopy
+  sketchCard: DemoSketchCardCopy
+  result: DemoResultCopy
+  dimensions: DemoDimension[]
+  sketch: {
+    ariaLabel: string
+    cabinetLabel: string
+  }
+  model: {
+    status: string
+    cardTitle: string
+    viewportAriaLabel: string
+    wardrobeLabel: string
+  }
+  summary: DemoSummary
+}
+
+export interface DemoSummary {
+  eyebrow: string
+  heading: string
+  description: string
+  budget: {
+    label: string
+    value: string
+    note: string
+  }
+  fields: DemoSummaryField[]
+  quoteLabel: string
+  quoteUnavailableNote: string
+  shareLabel: string
+  downloadLabel: string
+  downloadFilename: string
+  feedback: DemoFeedbackCopy
+  preview: {
+    twoDLabel: string
+    threeDLabel: string
+    twoDMeta: string
+    threeDMeta: string
+    approvedLabel: string
+    enlargeLabel: string
+    textureLabel: string
+    interactionHint: string
+    resetViewLabel: string
+    textureFeedback: string
+    tablistLabel: string
+  }
+  textures: DemoTexture[]
+}
+
+export interface DemoPrompt {
+  heading: string
+  formLabel: string
+  attachmentLabel: string
+  attachmentSrLabel: string
+  placeholder: string
+  submitLabel: string
+  helpLabel: string
+  attachmentHint: string
+  attachmentSelectedPrefix: string
+  examplePrompts: string[]
+}
+
+export interface DemoProgressCopy {
+  ariaLabel: string
+  completedLabel: string
+}
+
+export interface DemoSketchCardCopy {
+  title: string
+  dimensionsTitle: string
+  nextLabel: string
+  downloadLabel: string
+  fullscreenLabel: string
+  editLabel: string
+  editTitle: string
+  editFeedback: string
+}
+
+export interface DemoResultCopy {
+  editTitleLabel: string
+  editButtonLabel: string
+  unavailableLabel: string
+}
+
+export interface DemoFeedbackCopy {
+  shareSuccess: string
+  shareCancelled: string
+  shareDenied: string
+  clipboardSuccess: string
+  clipboardFailure: string
+  unsupported: string
+  downloadSuccess: string
+  downloadUnavailable: string
+}
+
+export interface DemoSummaryField {
+  label: string
+  value: string
+}
+
+export interface DemoTexture {
+  name: string
+  front: string
+  side: string
+  top: string
+}

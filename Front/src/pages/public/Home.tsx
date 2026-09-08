@@ -1,6 +1,7 @@
 import heroImage from '@/assets/hero.png'
 import HeroHeader from '@/components/Hero/HeroHeader'
 import { ArrowDown, ArrowRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 const linkFocus =
   'rounded-sm outline-none transition-opacity hover:opacity-75 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-4 focus-visible:ring-offset-transparent'
@@ -22,7 +23,7 @@ function Home() {
           aria-hidden="true"
         />
 
-        <HeroHeader />
+        <HeroHeader variant="light" />
 
         <div className="flex w-full items-center px-6 pb-24 pt-28 sm:px-10 sm:pb-28 lg:px-[7.4vw] lg:pt-32">
           <div className="max-w-[43rem]">
@@ -37,13 +38,13 @@ function Home() {
               KUBO te ayuda a transformar tus ideas
               <br className="hidden sm:block" /> en un diseño 3D y lo lleva hasta sus piezas.
             </p>
-            <a
+            <Link
               className="mt-8 inline-flex items-center gap-5 rounded-full border border-white/90 px-6 py-3.5 text-sm font-medium outline-none transition-colors hover:bg-white hover:text-stone-900 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-4 focus-visible:ring-offset-transparent sm:mt-10 sm:px-7 sm:py-4 sm:text-base"
-              href="#demo"
+              to="/demo"
             >
               Diseñar con KUBO
               <ArrowRight aria-hidden="true" size={19} strokeWidth={1.6} />
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -61,7 +62,6 @@ function Home() {
         className="relative min-h-px scroll-mt-0 bg-[var(--color-surface)]"
         aria-label="Próximas secciones de KUBO"
       >
-        <span id="demo" className="absolute top-0" />
         <span id="contacto" className="absolute top-0" />
       </section>
     </main>
