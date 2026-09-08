@@ -2,7 +2,7 @@
   "title": "Placard",
   "status": "Boceto 2D - Requiere revisión",
   "downloadFilename": "placard-boceto.svg",
-  "description": "Revisá el boceto, pedí cambios puntuales y confirmá las medidas antes de avanzar al modelo 3D.",
+  "description": "Revisá el boceto y confirmá las medidas antes de avanzar al modelo 3D.",
   "currentStep": 2,
   "prompt": {
     "heading": "¿Qué te gustaría diseñar hoy?",
