@@ -26,12 +26,9 @@ function HeroHeader() {
             </a>
           </li>
           <li>
-            <a
-              className={`border-b border-white/80 pb-1 ${linkFocus}`}
-              href="#contacto"
-            >
+            <span className="border-b border-white/80 pb-1" role="link" aria-disabled="true">
               Contacto
-            </a>
+            </span>
           </li>
         </ul>
       </nav>
