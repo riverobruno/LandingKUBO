@@ -34,6 +34,10 @@ export interface DemoDesign {
     cardTitle: string
     viewportAriaLabel: string
     wardrobeLabel: string
+    pendingLabel: string
+    errorLabel: string
+    loadingLabel: string
+    loadErrorLabel: string
   }
   summary: DemoSummary
 }
@@ -61,13 +65,10 @@ export interface DemoSummary {
     threeDMeta: string
     approvedLabel: string
     enlargeLabel: string
-    textureLabel: string
     interactionHint: string
     resetViewLabel: string
-    textureFeedback: string
     tablistLabel: string
   }
-  textures: DemoTexture[]
 }
 
 export interface DemoPrompt {
@@ -80,6 +81,8 @@ export interface DemoPrompt {
   helpLabel: string
   attachmentHint: string
   attachmentSelectedPrefix: string
+  pendingLabel: string
+  errorLabel: string
   examplePrompts: string[]
 }
 
@@ -119,11 +122,4 @@ export interface DemoFeedbackCopy {
 export interface DemoSummaryField {
   label: string
   value: string
-}
-
-export interface DemoTexture {
-  name: string
-  front: string
-  side: string
-  top: string
 }

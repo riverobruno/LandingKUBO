@@ -5,23 +5,19 @@ import type { DemoDesign } from './types'
 
 interface DemoSketchCardProps {
   design: DemoDesign
+  sketchImage: string
 }
 
-function DemoSketchCard({ design }: DemoSketchCardProps) {
+function DemoSketchCard({ design, sketchImage }: DemoSketchCardProps) {
   const sketchRef = useRef<HTMLDivElement>(null)
 
   function downloadSketch() {
-    const svg = sketchRef.current?.querySelector('svg')
-    if (!svg) return
-    const blob = new Blob([new XMLSerializer().serializeToString(svg)], { type: 'image/svg+xml' })
-    const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
-    link.href = url
+    link.href = sketchImage
     link.download = design.downloadFilename
     document.body.appendChild(link)
     link.click()
     link.remove()
-    window.setTimeout(() => URL.revokeObjectURL(url), 0)
   }
 
   async function openFullscreen() {
@@ -47,7 +43,7 @@ function DemoSketchCard({ design }: DemoSketchCardProps) {
         </div>
       </header>
       <div ref={sketchRef} className="flex min-h-[19rem] items-center justify-center px-4 py-10 sm:min-h-[27rem] sm:px-12">
-        <WardrobeSketch ariaLabel={design.sketch.ariaLabel} cabinetLabel={design.sketch.cabinetLabel} />
+        <WardrobeSketch imageSrc={sketchImage} ariaLabel={design.sketch.ariaLabel} cabinetLabel={design.sketch.cabinetLabel} />
       </div>
       <footer className="flex flex-wrap items-end justify-between gap-5 border-t border-stone-100 px-5 py-6 sm:px-8">
         <div>

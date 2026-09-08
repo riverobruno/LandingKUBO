@@ -6,11 +6,13 @@ import type { DemoDesign } from './types'
 
 interface DemoSummaryScreenProps {
   design: DemoDesign
+  sketchImage: string
+  glbUrl: string
   title: string
   onTitleChange: (title: string) => void
 }
 
-function DemoSummaryScreen({ design, title, onTitleChange }: DemoSummaryScreenProps) {
+function DemoSummaryScreen({ design, sketchImage, glbUrl, title, onTitleChange }: DemoSummaryScreenProps) {
   const [editingTitle, setEditingTitle] = useState(false)
   const [feedback, setFeedback] = useState('')
   const summary = design.summary
@@ -81,7 +83,7 @@ function DemoSummaryScreen({ design, title, onTitleChange }: DemoSummaryScreenPr
       </div>
       <p className="sr-only" role="status" aria-live="polite">{feedback}</p>
       <div className="mt-8 grid items-start gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(20rem,1fr)]">
-         <DesignPreview design={design} onPreviewLabelChange={setPreviewLabel} onFeedback={setFeedback} />
+         <DesignPreview design={design} sketchImage={sketchImage} glbUrl={glbUrl} onPreviewLabelChange={setPreviewLabel} />
         <ProposalSummary summary={summary} />
       </div>
     </section>

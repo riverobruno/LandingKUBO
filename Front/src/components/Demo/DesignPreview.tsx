@@ -1,24 +1,21 @@
 import { Maximize2, RotateCcw } from 'lucide-react'
 import { useRef, useState } from 'react'
-import WardrobeModelPlaceholder from './WardrobeModelPlaceholder'
+import DemoModelViewer from './DemoModelViewer'
 import WardrobeSketch from './WardrobeSketch'
-import type { DemoDesign, DemoTexture } from './types'
+import type { DemoDesign } from './types'
 
 interface DesignPreviewProps {
   design: DemoDesign
+  sketchImage: string
+  glbUrl: string
   onPreviewLabelChange: (label: string) => void
-  onFeedback: (message: string) => void
 }
 
-function DesignPreview({ design, onPreviewLabelChange, onFeedback }: DesignPreviewProps) {
+function DesignPreview({ design, sketchImage, glbUrl, onPreviewLabelChange }: DesignPreviewProps) {
   const [tab, setTab] = useState<'2d' | '3d'>('2d')
-  const [textureIndex, setTextureIndex] = useState(0)
-  const [rotation, setRotation] = useState({ x: 0, y: 0 })
-  const [scale, setScale] = useState(1)
-  const pointerStart = useRef<{ x: number; y: number } | null>(null)
+  const [resetSignal, setResetSignal] = useState(0)
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([])
   const fullscreenRef = useRef<HTMLDivElement>(null)
-  const texture: DemoTexture = design.summary.textures[textureIndex]
   const preview = design.summary.preview
 
   function selectTab(nextTab: '2d' | '3d', focus = false) {
@@ -40,34 +37,8 @@ function DesignPreview({ design, onPreviewLabelChange, onFeedback }: DesignPrevi
     selectTab(tabs[nextIndex], true)
   }
 
-  function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
-    if (tab !== '3d') return
-    pointerStart.current = { x: event.clientX, y: event.clientY }
-    event.currentTarget.setPointerCapture(event.pointerId)
-  }
-
-  function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
-    if (!pointerStart.current || tab !== '3d') return
-    const deltaX = event.clientX - pointerStart.current.x
-    const deltaY = event.clientY - pointerStart.current.y
-    pointerStart.current = { x: event.clientX, y: event.clientY }
-    setRotation((current) => ({ x: Math.max(-18, Math.min(18, current.x - deltaY * 0.35)), y: current.y + deltaX * 0.35 }))
-  }
-
-  function clearPointerInteraction(event?: React.PointerEvent<HTMLDivElement>) {
-    pointerStart.current = null
-    if (event?.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId)
-  }
-
   function resetView() {
-    setRotation({ x: 0, y: 0 })
-    setScale(1)
-  }
-
-  function handleWheel(event: React.WheelEvent<HTMLDivElement>) {
-    if (tab !== '3d') return
-    event.preventDefault()
-    setScale((current) => Math.max(0.8, Math.min(1.25, current - event.deltaY * 0.001)))
+    setResetSignal((current) => current + 1)
   }
 
   return (
@@ -90,16 +61,13 @@ function DesignPreview({ design, onPreviewLabelChange, onFeedback }: DesignPrevi
           <button className="absolute right-5 top-4 inline-flex min-h-11 items-center gap-2 rounded-full border border-stone-300 bg-white/70 px-4 text-xs font-medium text-stone-700 outline-none hover:bg-white focus-visible:ring-2 focus-visible:ring-stone-900 sm:right-7" type="button" onClick={() => { if (fullscreenRef.current && document.fullscreenEnabled) void fullscreenRef.current.requestFullscreen().catch(() => undefined) }}>
             <Maximize2 size={15} aria-hidden="true" />{preview.enlargeLabel}
           </button>
-           <div className="w-full max-w-3xl"><WardrobeSketch ariaLabel={design.sketch.ariaLabel} cabinetLabel={design.sketch.cabinetLabel} /></div>
+           <div className="w-full max-w-3xl"><WardrobeSketch imageSrc={sketchImage} ariaLabel={design.sketch.ariaLabel} cabinetLabel={design.sketch.cabinetLabel} /></div>
         </div>
       ) : (
-         <div ref={fullscreenRef} className="relative flex min-h-[28rem] touch-none select-none items-center justify-center overflow-hidden bg-[#eee5db] px-5 py-14 sm:min-h-[38rem] sm:px-12" role="tabpanel" id="design-panel-3d" aria-labelledby="design-tab-3d" onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={clearPointerInteraction} onPointerCancel={clearPointerInteraction} onLostPointerCapture={clearPointerInteraction} onWheel={handleWheel}>
-          <button className="absolute right-5 top-4 z-[1] inline-flex min-h-11 items-center gap-2 rounded-full border border-stone-300 bg-white/70 px-4 text-xs font-medium text-stone-700 outline-none hover:bg-white focus-visible:ring-2 focus-visible:ring-stone-900 sm:right-7" type="button" onClick={() => { const nextIndex = (textureIndex + 1) % design.summary.textures.length; setTextureIndex(nextIndex); onFeedback(`${preview.textureFeedback}: ${design.summary.textures[nextIndex].name}.`) }}>
-            {preview.textureLabel}
-          </button>
-           <div className="w-full max-w-3xl" style={{ transform: `perspective(900px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) scale(${scale})` }}><WardrobeModelPlaceholder ariaLabel={design.model.viewportAriaLabel} wardrobeLabel={design.model.wardrobeLabel} texture={texture} /></div>
-          <div className="absolute bottom-5 flex flex-wrap items-center justify-center gap-2"><span className="rounded-full bg-white/75 px-4 py-2 text-xs text-stone-600">{preview.interactionHint}</span><button className="inline-flex min-h-11 items-center gap-2 rounded-full bg-white/80 px-4 text-xs font-medium text-stone-700 outline-none hover:bg-white focus-visible:ring-2 focus-visible:ring-stone-900" type="button" onClick={resetView}><RotateCcw size={14} aria-hidden="true" />{preview.resetViewLabel}</button></div>
-        </div>
+          <div ref={fullscreenRef} className="relative flex min-h-[28rem] items-center justify-center overflow-hidden bg-[#eee5db] px-5 py-14 sm:min-h-[38rem] sm:px-12" role="tabpanel" id="design-panel-3d" aria-labelledby="design-tab-3d">
+           <div className="w-full max-w-3xl"><DemoModelViewer glbUrl={glbUrl} ariaLabel={design.model.viewportAriaLabel} loadingLabel={design.model.loadingLabel} errorLabel={design.model.loadErrorLabel} resetSignal={resetSignal} className="h-[28rem] sm:h-[38rem]" /></div>
+           <div className="absolute bottom-5 z-[1] flex flex-wrap items-center justify-center gap-2"><span className="rounded-full bg-white/75 px-4 py-2 text-xs text-stone-600">{preview.interactionHint}</span><button className="inline-flex min-h-11 items-center gap-2 rounded-full bg-white/80 px-4 text-xs font-medium text-stone-700 outline-none hover:bg-white focus-visible:ring-2 focus-visible:ring-stone-900" type="button" onClick={resetView}><RotateCcw size={14} aria-hidden="true" />{preview.resetViewLabel}</button></div>
+         </div>
       )}
     </article>
   )

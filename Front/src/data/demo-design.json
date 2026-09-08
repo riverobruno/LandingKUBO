@@ -14,6 +14,8 @@
     "helpLabel": "Inspirate con estas ideas",
     "attachmentHint": "Podés adjuntar una imagen de referencia",
     "attachmentSelectedPrefix": "Referencia seleccionada",
+    "pendingLabel": "Generando tu diseño...",
+    "errorLabel": "No pudimos generar el diseño. Intentá nuevamente.",
     "examplePrompts": [
       "Necesito un placard para una habitación chica, con puertas corredizas y espacio para ropa larga.",
       "Quiero un escritorio compacto para trabajar desde casa, con estantes para libros y una cajonera.",
@@ -40,7 +42,7 @@
   "steps": [
     { "number": 1, "label": "Idea", "status": "Completada", "currentStatus": "Completada" },
     { "number": 2, "label": "Boceto 2D", "status": "Completada", "currentStatus": "Requiere revisión" },
-    { "number": 3, "label": "Modelo 3D", "status": "Próximo", "currentStatus": "Procesando" },
+    { "number": 3, "label": "Modelo 3D", "status": "Próximo", "currentStatus": "Listo para revisar" },
     { "number": 4, "label": "Resumen", "status": "Próximo", "currentStatus": "Próximo" }
   ],
   "version": "VERSIÓN 1",
@@ -55,9 +57,13 @@
   },
   "model": {
     "status": "Modelo 3D - Requiere revisión",
-    "cardTitle": "Modelo 3D no disponible",
+    "cardTitle": "Modelo 3D",
     "viewportAriaLabel": "Vista previa del modelo 3D del placard",
-    "wardrobeLabel": "Modelo 3D de un placard en perspectiva"
+    "wardrobeLabel": "Modelo 3D de un placard en perspectiva",
+    "pendingLabel": "Generando el modelo 3D...",
+    "errorLabel": "No pudimos generar el modelo 3D. Intentá nuevamente.",
+    "loadingLabel": "Cargando el modelo 3D...",
+    "loadErrorLabel": "No pudimos cargar el modelo 3D. Mostramos la referencia visual."
   },
   "summary": {
     "eyebrow": "RESUMEN",
@@ -92,19 +98,12 @@
       "twoDLabel": "Boceto 2D",
       "threeDLabel": "Modelo 3D",
       "twoDMeta": "Vista frontal · escala referencial",
-      "threeDMeta": "Modelo 3D no disponible",
+      "threeDMeta": "Vista interactiva · GLB",
       "approvedLabel": "BOCETO APROBADO",
       "enlargeLabel": "Ampliar boceto",
-      "textureLabel": "Cambiar texturas",
       "interactionHint": "Arrastrá para rotar · Deslizá para acercar",
       "resetViewLabel": "Restablecer vista",
-      "textureFeedback": "Textura seleccionada",
       "tablistLabel": "Vista del diseño"
-    },
-    "textures": [
-      { "name": "Natural", "front": "#f6f2ec", "side": "#d9d2c9", "top": "#fffefa" },
-      { "name": "Arena", "front": "#eadcca", "side": "#cbb9a2", "top": "#f6ead9" },
-      { "name": "Salvia", "front": "#e1e6dc", "side": "#b9c1b1", "top": "#f0f3eb" }
-    ]
+    }
   }
 }

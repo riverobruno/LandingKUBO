@@ -7,22 +7,26 @@ import type { DemoDesign, DemoStepNumber } from './types'
 
 interface DemoResultProps {
   design: DemoDesign
+  sketchImage: string
+  glbUrl: string
   currentStep: DemoStepNumber
   title: string
   onTitleChange: (title: string) => void
-  onAdvance: () => void
+  onAdvance: () => void | Promise<void>
+  isModelSubmitting: boolean
+  modelError: string
 }
 
-function DemoResult({ design, currentStep, title, onTitleChange, onAdvance }: DemoResultProps) {
+function DemoResult({ design, sketchImage, glbUrl, currentStep, title, onTitleChange, onAdvance, isModelSubmitting, modelError }: DemoResultProps) {
   const [editingTitle, setEditingTitle] = useState(false)
   const currentStepData = design.steps.find((step) => step.number === currentStep)
 
   function renderStageContent() {
     switch (currentStep) {
       case 2:
-        return <DemoSketchCard design={design} />
+        return <DemoSketchCard design={design} sketchImage={sketchImage} />
       case 3:
-        return <DemoModelCard design={design} />
+        return <DemoModelCard design={design} glbUrl={glbUrl} />
       default:
          return <p className="rounded-2xl bg-white p-6 text-sm text-stone-600" role="status">{design.result.unavailableLabel}</p>
     }
@@ -45,9 +49,12 @@ function DemoResult({ design, currentStep, title, onTitleChange, onAdvance }: De
         </div>
         <div className="mt-12 overflow-x-auto sm:mt-16"><DemoProgress steps={design.steps} currentStep={currentStep} copy={design.progress} /></div>
         <div className="mt-6">{renderStageContent()}</div>
-         {(currentStep === 2 || currentStep === 3) && <div className="mt-6 flex justify-end">
-           <button className="inline-flex min-h-12 items-center gap-3 rounded-full bg-white px-6 text-sm font-medium text-stone-900 shadow-[0_0.75rem_2rem_rgba(68,46,31,0.12)] outline-none transition-transform motion-reduce:transition-none hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-stone-900 focus-visible:ring-offset-2 focus-visible:ring-offset-[#b89c82]" type="button" onClick={onAdvance}>{design.sketchCard.nextLabel} <ArrowRight size={18} aria-hidden="true" /></button>
-        </div>}
+          {(currentStep === 2 || currentStep === 3) && <div className="mt-6 flex flex-col items-end gap-3">
+            {currentStep === 2 && <p id="model-transition-status" className={`min-h-5 text-right text-xs ${modelError ? 'text-red-800' : 'text-stone-700'}`} role={modelError ? 'alert' : 'status'} aria-live={modelError ? 'assertive' : 'polite'} aria-busy={isModelSubmitting}>
+              {isModelSubmitting ? design.model.pendingLabel : modelError}
+            </p>}
+            <button className="inline-flex min-h-12 items-center gap-3 rounded-full bg-white px-6 text-sm font-medium text-stone-900 shadow-[0_0.75rem_2rem_rgba(68,46,31,0.12)] outline-none transition-transform motion-reduce:transition-none hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-stone-900 focus-visible:ring-offset-2 focus-visible:ring-offset-[#b89c82] disabled:cursor-wait disabled:opacity-60" type="button" onClick={() => void onAdvance()} aria-describedby={currentStep === 2 ? 'model-transition-status' : undefined} aria-busy={currentStep === 2 && isModelSubmitting} disabled={currentStep === 2 && isModelSubmitting}>{design.sketchCard.nextLabel} <ArrowRight size={18} aria-hidden="true" /></button>
+          </div>}
       </div>
     </section>
   )

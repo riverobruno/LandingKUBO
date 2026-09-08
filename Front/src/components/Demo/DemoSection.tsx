@@ -5,15 +5,19 @@ import type { DemoPrompt } from './types'
 interface DemoSectionProps {
   onSubmit: (prompt: string) => void
   copy: DemoPrompt
+  isSubmitting: boolean
+  errorMessage: string
 }
 
-function DemoSection({ onSubmit, copy }: DemoSectionProps) {
+function DemoSection({ onSubmit, copy, isSubmitting, errorMessage }: DemoSectionProps) {
   const [prompt, setPrompt] = useState('')
   const [attachmentName, setAttachmentName] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+
+    if (isSubmitting) return
 
     const trimmedPrompt = prompt.trim()
     if (!trimmedPrompt) {
@@ -64,6 +68,7 @@ function DemoSection({ onSubmit, copy }: DemoSectionProps) {
                 type="file"
                 accept="image/*"
                 aria-describedby="attachment-status"
+                disabled={isSubmitting}
                 onChange={handleAttachmentChange}
               />
             </label>
@@ -74,11 +79,14 @@ function DemoSection({ onSubmit, copy }: DemoSectionProps) {
               onChange={handlePromptChange}
               placeholder={copy.placeholder}
               aria-label={copy.formLabel}
+              disabled={isSubmitting}
             />
             <button
-               className="flex size-11 shrink-0 items-center justify-center rounded-full bg-stone-900 text-white outline-none transition-transform motion-reduce:transition-none hover:scale-105 focus-visible:ring-2 focus-visible:ring-stone-900 focus-visible:ring-offset-2 sm:size-12"
+              className="flex size-11 shrink-0 items-center justify-center rounded-full bg-stone-900 text-white outline-none transition-transform motion-reduce:transition-none hover:scale-105 focus-visible:ring-2 focus-visible:ring-stone-900 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60 sm:size-12"
               type="submit"
               aria-label={copy.submitLabel}
+              aria-busy={isSubmitting}
+              disabled={isSubmitting}
             >
               <ArrowUp aria-hidden="true" size={18} strokeWidth={1.8} />
             </button>
@@ -87,7 +95,9 @@ function DemoSection({ onSubmit, copy }: DemoSectionProps) {
             <span id="attachment-status" className="min-w-0 break-words" role="status" aria-live="polite">
               {attachmentName ? `${copy.attachmentSelectedPrefix}: ${attachmentName}` : copy.attachmentHint}
             </span>
-             <span className="min-w-0 break-words" aria-live="polite" />
+            <span className={`min-w-0 break-words text-right ${errorMessage ? 'text-red-800' : ''}`} role={errorMessage ? 'alert' : 'status'} aria-live={errorMessage ? 'assertive' : 'polite'}>
+              {isSubmitting ? copy.pendingLabel : errorMessage}
+            </span>
           </div>
         </form>
 
@@ -102,6 +112,7 @@ function DemoSection({ onSubmit, copy }: DemoSectionProps) {
                 key={example}
                 className="group flex min-h-11 items-start gap-2.5 rounded-xl border border-white/45 bg-white/25 p-3.5 text-left text-[0.8125rem] leading-[1.5] text-stone-800 backdrop-blur-sm transition-colors hover:bg-white/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-900 focus-visible:ring-offset-2 focus-visible:ring-offset-[#b89c82]"
                 type="button"
+                disabled={isSubmitting}
                 onClick={() => {
                   setPrompt(example)
                   inputRef.current?.focus()
