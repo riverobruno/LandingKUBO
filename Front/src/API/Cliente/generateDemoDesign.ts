@@ -1,4 +1,3 @@
-import mockResponse from './demo-design-response.json'
 
 export interface DemoDesignRequest {
   prompt: string
@@ -49,5 +48,15 @@ export async function generateDemoDesign(request: DemoDesignRequest): Promise<De
     throw new Error('A non-empty demo prompt is required')
   }
 
-  return parseMockResponse(mockResponse)
+  const baseUrl = (import.meta.env.VITE_API_URL?.trim() || 'http://localhost:3000').replace(/\/+$/, '')
+  const url = new URL(`${baseUrl}/demo/design`)
+  url.searchParams.set('prompt', request.prompt)
+
+  const response = await fetch(url.toString())
+  if (!response.ok) {
+    throw new Error(`Failed to generate demo design: ${response.status}`)
+  }
+
+  const data: unknown = await response.json()
+  return parseMockResponse(data)
 }

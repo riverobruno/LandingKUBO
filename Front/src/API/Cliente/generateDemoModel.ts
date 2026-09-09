@@ -1,4 +1,3 @@
-import mockResponse from './demo-model-response.json'
 
 export interface DemoModelRequest {
   name: string
@@ -50,5 +49,15 @@ export async function generateDemoModel(request: DemoModelRequest): Promise<Demo
     throw new Error('A non-empty demo model name and 2D image are required')
   }
 
-  return parseMockResponse(mockResponse)
+  const baseUrl = (import.meta.env.VITE_API_URL?.trim() || 'http://localhost:3000').replace(/\/+$/, '')
+  const url = new URL(`${baseUrl}/demo/model`)
+  url.searchParams.set('name', request.name)
+
+  const response = await fetch(url.toString())
+  if (!response.ok) {
+    throw new Error(`Failed to generate demo model: ${response.status}`)
+  }
+
+  const data: unknown = await response.json()
+  return parseMockResponse(data)
 }
