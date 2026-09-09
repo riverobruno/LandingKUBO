@@ -4,6 +4,7 @@ function Home() {
   return (
     <main>
       <InteractiveProcess />
+      <span id="contacto" className="block h-px" aria-hidden="true" />
     </main>
   )
 }

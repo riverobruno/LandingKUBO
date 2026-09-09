@@ -1,0 +1,104 @@
+{
+  "title": "Placard",
+  "downloadFilename": "placard-boceto.svg",
+  "currentStep": 2,
+  "prompt": {
+    "heading": "¿Qué te gustaría diseñar hoy?",
+    "formLabel": "Describí tu mueble",
+    "attachmentLabel": "Adjuntar una referencia",
+    "attachmentSrLabel": "Adjuntar una referencia visual",
+    "placeholder": "Describí el mueble que imaginás...",
+    "submitLabel": "Ver vista previa de la idea",
+    "helpLabel": "Inspirate con estas ideas",
+    "attachmentHint": "Podés adjuntar una imagen de referencia",
+    "attachmentSelectedPrefix": "Referencia seleccionada",
+    "pendingLabel": "Generando tu diseño...",
+    "errorLabel": "No pudimos generar el diseño. Intentá nuevamente.",
+    "examplePrompts": [
+      "Necesito un placard para una habitación chica, con puertas corredizas y espacio para ropa larga.",
+      "Quiero un escritorio compacto para trabajar desde casa, con estantes para libros y una cajonera.",
+      "Busco un mueble bajo para TV de 55 pulgadas, con lugar para consola, router y guardado oculto.",
+      "Me gustaría una biblioteca liviana para el living, con espacios abiertos para decoración y guardado cerrado abajo."
+    ]
+  },
+  "progress": { "ariaLabel": "Progreso del diseño" },
+  "sketchCard": {
+    "title": "Boceto actual",
+    "dimensionsTitle": "Medidas actuales",
+    "previousLabel": "Anterior",
+    "nextLabel": "Siguiente",
+    "downloadLabel": "Descargar boceto en SVG",
+    "fullscreenLabel": "Ver boceto en pantalla completa",
+    "editLabel": "Editar medidas localmente",
+    "editTitle": "Edición local",
+    "editFeedback": "La edición de medidas es local y estará disponible próximamente."
+  },
+  "result": {
+    "editTitleLabel": "Título del diseño",
+    "editButtonLabel": "Editar título localmente",
+    "unavailableLabel": "Vista de resultado no disponible"
+  },
+  "steps": [
+    { "number": 1, "label": "Idea" },
+    { "number": 2, "label": "Boceto 2D" },
+    { "number": 3, "label": "Modelo 3D" },
+    { "number": 4, "label": "Resumen" }
+  ],
+  "version": "VERSIÓN 1",
+  "dimensions": [
+    { "label": "Ancho", "value": "120 cm" },
+    { "label": "Alto", "value": "200 cm" },
+    { "label": "Profundidad", "value": "55 cm" }
+  ],
+  "sketch": {
+    "ariaLabel": "Boceto lineal de un placard con estantes, barrales, prendas, cajones y paneles inferiores",
+    "cabinetLabel": "Placard"
+  },
+  "model": {
+    "cardTitle": "Modelo 3D",
+    "viewportAriaLabel": "Vista previa del modelo 3D del placard",
+    "wardrobeLabel": "Modelo 3D de un placard en perspectiva",
+    "pendingLabel": "Generando el modelo 3D...",
+    "errorLabel": "No pudimos generar el modelo 3D. Intentá nuevamente.",
+    "loadingLabel": "Cargando el modelo 3D...",
+    "loadErrorLabel": "No pudimos cargar el modelo 3D. Mostramos la referencia visual."
+  },
+  "summary": {
+    "eyebrow": "RESUMEN",
+    "heading": "Propuesta lista para revisar antes de cotizar.",
+    "description": "Necesito un placard para una habitación chica, con puertas corredizas y espacio para ropa larga.",
+    "budget": {
+      "label": "PRESUPUESTO ESTIMADO",
+      "note": "Total estimado orientativo sujeto a revisión final de materiales y medidas."
+    },
+    "fields": [
+      { "label": "Tipo", "value": "Placard" },
+      { "label": "Estilo", "value": "Moderno y funcional" },
+      { "label": "Medidas", "value": "120 cm × 200 cm × 55 cm" }
+    ],
+    "shareLabel": "Compartir",
+    "downloadLabel": "Descargar propuesta",
+    "downloadFilename": "placard-propuesta.json",
+    "feedback": {
+      "shareSuccess": "La propuesta está lista para compartir.",
+      "shareCancelled": "Compartir fue cancelado.",
+      "shareDenied": "El navegador no permitió compartir la propuesta.",
+      "clipboardSuccess": "Propuesta copiada al portapapeles.",
+      "clipboardFailure": "No se pudo copiar la propuesta al portapapeles.",
+      "unsupported": "Tu navegador no admite compartir ni copiar esta propuesta.",
+      "downloadSuccess": "Propuesta descargada localmente.",
+      "downloadUnavailable": "No se pudo preparar la propuesta para descargar."
+    },
+    "preview": {
+      "twoDLabel": "Boceto 2D",
+      "threeDLabel": "Modelo 3D",
+      "twoDMeta": "Vista frontal · escala referencial",
+      "threeDMeta": "Vista interactiva · GLB",
+      "approvedLabel": "BOCETO APROBADO",
+      "enlargeLabel": "Ampliar boceto",
+      "interactionHint": "Arrastrá para rotar · Deslizá para acercar",
+      "resetViewLabel": "Restablecer vista",
+      "tablistLabel": "Vista del diseño"
+    }
+  }
+}
