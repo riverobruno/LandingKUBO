@@ -35,7 +35,7 @@ function HeroHeader({ variant = 'light', surface = 'solid' }: HeroHeaderProps) {
   }, [hash, pathname])
 
   return (
-    <header className={`absolute inset-x-0 top-0 z-10 flex items-center justify-between px-6 py-6 sm:px-10 sm:py-8 lg:px-[5.5vw] lg:py-10 ${textColor} ${headerSurface}`}>
+    <header className={`absolute inset-x-0 top-0 z-50 flex items-center justify-between px-6 py-6 sm:px-10 sm:py-8 lg:px-[5.5vw] lg:py-10 ${textColor} ${headerSurface} ${isDarkVariant ? '' : 'drop-shadow-[0_1px_5px_rgba(35,22,14,0.65)]'}`}>
       <Link
         className={`relative flex items-center gap-4 sm:gap-5 ${linkFocus} focus-visible:ring-2 focus-visible:ring-offset-4 ${focusOffset} ${focusColor} ${isHomeCurrent ? `after:absolute after:-bottom-2 after:left-0 after:h-0.5 after:w-full ${homeIndicatorColor}` : ''}`}
         to="/"

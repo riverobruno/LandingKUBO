@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <g
+    id="desk-sketch"
+    fill="none"
+    stroke="#4A3528"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <g id="desk-top">
+      <g id="desk-top-outer">
+        <path id="desk-top-left-corner" pathLength="1" d="M 400 330 Q 400 300 430 300" />
+        <path id="desk-top-principal" pathLength="1" d="M 430 300 H 1170" />
+        <path id="desk-top-right-corner" pathLength="1" d="M 1170 300 Q 1200 300 1200 330" />
+      </g>
+      <path id="desk-top-inner" pathLength="1" d="M 420 340 H 1180" />
+    </g>
+
+    <g id="desk-legs">
+      <g id="desk-left-leg">
+        <path id="desk-left-leg-outer" pathLength="1" d="M 400 330 V 600" />
+        <path id="desk-left-leg-return" pathLength="1" d="M 400 600 H 420 V 340" />
+      </g>
+      <g id="desk-right-leg">
+        <path id="desk-right-leg-outer" pathLength="1" d="M 1200 330 V 600" />
+        <path id="desk-right-leg-return" pathLength="1" d="M 1200 600 H 1180 V 340" />
+      </g>
+    </g>
+
+    <g id="desk-apron">
+      <path id="desk-apron-bottom" pathLength="1" d="M 420 415 H 980" />
+    </g>
+
+    <g id="desk-drawers">
+      <path id="desk-drawer-divider" pathLength="1" d="M 980 340 V 510" />
+      <path id="desk-upper-drawer-bottom" pathLength="1" d="M 980 420 H 1180" />
+      <path id="desk-lower-drawer-bottom" pathLength="1" d="M 980 510 H 1180" />
+    </g>
+  </g>
+</svg>
