@@ -5,7 +5,7 @@ const linkFocus =
 
 function HeroHeader() {
   return (
-    <header className="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-6 py-6 sm:px-10 sm:py-8 lg:px-[5.5vw] lg:py-10">
+    <header className="absolute inset-x-0 top-0 z-50 flex items-center justify-between px-6 py-6 text-white drop-shadow-[0_1px_5px_rgba(35,22,14,0.65)] sm:px-10 sm:py-8 lg:px-[5.5vw] lg:py-10">
       <a
         className={`flex items-center gap-4 sm:gap-5 ${linkFocus}`}
         href="/"

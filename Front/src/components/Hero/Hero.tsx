@@ -1,25 +1,25 @@
 import heroImage from '@/assets/hero.png'
-import HeroHeader from '@/components/Hero/HeroHeader'
 import { ArrowDown, ArrowRight } from 'lucide-react'
 
 interface HeroProps {
   contentOpacity: number
-  imageOpacity: number
+  exitProgress: number
   isHidden: boolean
 }
 
 const linkFocus =
   'rounded-sm outline-none transition-opacity hover:opacity-75 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-4 focus-visible:ring-offset-transparent'
 
-function Hero({ contentOpacity, imageOpacity, isHidden }: HeroProps) {
+function Hero({ contentOpacity, exitProgress, isHidden }: HeroProps) {
   return (
     <section
       className="absolute inset-0 flex overflow-hidden text-white"
       aria-labelledby="hero-title"
       aria-hidden={isHidden}
       inert={isHidden}
+      style={{ transform: `translate3d(0, ${exitProgress * -100}%, 0)` }}
     >
-      <div className="absolute inset-0" style={{ opacity: imageOpacity }}>
+      <div className="absolute inset-0">
         <img
           className="absolute inset-0 size-full object-cover object-[58%_center] sm:object-center"
           src={heroImage}
@@ -32,8 +32,6 @@ function Hero({ contentOpacity, imageOpacity, isHidden }: HeroProps) {
       </div>
 
       <div className="absolute inset-0" style={{ opacity: contentOpacity }}>
-        <HeroHeader />
-
         <div className="flex size-full items-center px-6 pb-24 pt-28 sm:px-10 sm:pb-28 lg:px-[7.4vw] lg:pt-32">
           <div className="max-w-[43rem]">
             <h1

@@ -1,5 +1,13 @@
 import DeskSketch from '@/components/InteractiveProcess/DeskSketch'
+import DeskMeasurements from '@/components/InteractiveProcess/DeskMeasurements'
 import type { PromptInputBounds } from '@/components/InteractiveProcess/PromptScene'
+import SketchNarrative from '@/components/InteractiveProcess/SketchNarrative'
+import {
+  calculateDeskLayout,
+  calculateDeskSketchTransform,
+  isCompactDeskLandscape,
+  type DeskSketchTransform,
+} from '@/components/InteractiveProcess/deskLayout'
 
 interface DeskProgress {
   cabinetDivider: number
@@ -11,11 +19,28 @@ interface DeskProgress {
 
 interface SketchSceneProps {
   deskProgress: DeskProgress
+  explodedNarrativeIsAccessible: boolean
+  explodedNarrativeProgress: number
   inputBounds: PromptInputBounds | null
   isAccessible: boolean
+  measurementOpacity: number
+  modelNarrativeIsAccessible: boolean
+  modelNarrativeProgress: number
+  modelIsAccessible: boolean
+  sketchOpacity: number
+  principalHandoffProgress: number
   segmentTransformProgress: number
   sourceCornersExitProgress: number
   sourceContourProgress: number
+  sketchNarrativeExitProgress: number
+  sketchNarrativeIsAccessible: boolean
+  technicalProgress: {
+    calloutArrows: number
+    calloutLabels: number
+    dimensionGuides: number
+    dimensionLabels: number
+    narrative: number
+  }
 }
 
 interface Point {
@@ -62,23 +87,13 @@ function interpolateLine(
   }
 }
 
-function calculateDeskTransform(viewportWidth: number, viewportHeight: number) {
-  const scale = Math.min(viewportWidth / 1600, viewportHeight / 900)
-
-  return {
-    offsetX: (viewportWidth - 1600 * scale) / 2,
-    offsetY: (viewportHeight - 900 * scale) / 2,
-    scale,
-  }
-}
-
 function transformPoint(
   point: Point,
-  transform: ReturnType<typeof calculateDeskTransform>,
+  transform: DeskSketchTransform,
 ) {
   return {
-    x: transform.offsetX + point.x * transform.scale,
-    y: transform.offsetY + point.y * transform.scale,
+    x: transform.offsetX + point.x * transform.scaleX,
+    y: transform.offsetY + point.y * transform.scaleY,
   }
 }
 
@@ -154,18 +169,34 @@ function contractCorner(corner: CornerGeometry, progress: number) {
 
 function SketchScene({
   deskProgress,
+  explodedNarrativeIsAccessible,
+  explodedNarrativeProgress,
   inputBounds,
   isAccessible,
+  measurementOpacity,
+  modelNarrativeIsAccessible,
+  modelNarrativeProgress,
+  modelIsAccessible,
+  sketchOpacity,
+  principalHandoffProgress,
   segmentTransformProgress,
   sourceCornersExitProgress,
   sourceContourProgress,
+  sketchNarrativeExitProgress,
+  sketchNarrativeIsAccessible,
+  technicalProgress,
 }: SketchSceneProps) {
   const sourceStrokeOpacity = 0.7
   const cornerOpacity =
     sourceStrokeOpacity * sourceContourProgress * (1 - sourceCornersExitProgress)
   if (!inputBounds) return null
 
-  const deskTransform = calculateDeskTransform(
+  const deskTransform = calculateDeskLayout(
+    inputBounds.viewportWidth,
+    inputBounds.viewportHeight,
+  )
+  const deskSketchTransform = calculateDeskSketchTransform(deskTransform)
+  const isCompactLandscape = isCompactDeskLandscape(
     inputBounds.viewportWidth,
     inputBounds.viewportHeight,
   )
@@ -174,20 +205,22 @@ function SketchScene({
     Object.entries(canonicalTargetSegments).map(([name, line]) => [
       name,
       {
-        start: transformPoint(line.start, deskTransform),
-        end: transformPoint(line.end, deskTransform),
+        start: transformPoint(line.start, deskSketchTransform),
+        end: transformPoint(line.end, deskSketchTransform),
       },
     ]),
   ) as Record<keyof typeof canonicalTargetSegments, LineGeometry>
   const segmentStrokeWidth = lerp(1, 4 * deskTransform.scale, segmentTransformProgress)
   const segmentOpacity =
     sourceContourProgress *
-    lerp(sourceStrokeOpacity, 1, segmentTransformProgress)
+    lerp(sourceStrokeOpacity, 1, segmentTransformProgress) *
+    (principalHandoffProgress < 1 ? 1 : 0)
 
   return (
     <section
-      className="pointer-events-none absolute inset-0 z-20 overflow-hidden"
+      className="pointer-events-none absolute inset-0 z-30 overflow-hidden"
       aria-hidden={!isAccessible}
+      inert={!isAccessible}
     >
       <svg
         className="absolute inset-0 size-full"
@@ -231,17 +264,46 @@ function SketchScene({
 
       <DeskSketch
         cabinetDividerProgress={deskProgress.cabinetDivider}
-        deskOffsetX={deskTransform.offsetX}
-        deskOffsetY={deskTransform.offsetY}
-        deskScale={deskTransform.scale}
-        isAccessible={isAccessible}
+        deskOffsetX={deskSketchTransform.offsetX}
+        deskOffsetY={deskSketchTransform.offsetY}
+        deskScaleX={deskSketchTransform.scaleX}
+        deskScaleY={deskSketchTransform.scaleY}
         legDetailsProgress={deskProgress.legDetails}
         lowerDrawerProgress={deskProgress.lowerDrawer}
+        principalHandoffProgress={principalHandoffProgress}
         topDetailsProgress={deskProgress.topDetails}
         upperDrawerProgress={deskProgress.upperDrawer}
         viewportHeight={inputBounds.viewportHeight}
         viewportWidth={inputBounds.viewportWidth}
+        opacity={sketchOpacity}
       />
+      <DeskMeasurements
+        arrowProgress={technicalProgress.calloutArrows}
+        deskOffsetX={deskSketchTransform.offsetX}
+        deskOffsetY={deskSketchTransform.offsetY}
+        deskScaleX={deskSketchTransform.scaleX}
+        deskScaleY={deskSketchTransform.scaleY}
+        guideProgress={technicalProgress.dimensionGuides}
+        labelProgress={technicalProgress.dimensionLabels}
+        noteProgress={technicalProgress.calloutLabels}
+        opacity={measurementOpacity}
+        viewportHeight={inputBounds.viewportHeight}
+        viewportWidth={inputBounds.viewportWidth}
+      />
+      <SketchNarrative
+        explodedIsAccessible={explodedNarrativeIsAccessible}
+        explodedProgress={explodedNarrativeProgress}
+        isCompactLandscape={isCompactLandscape}
+        modelIsAccessible={modelNarrativeIsAccessible}
+        modelProgress={modelNarrativeProgress}
+        sketchExitProgress={sketchNarrativeExitProgress}
+        sketchIsAccessible={sketchNarrativeIsAccessible}
+        sketchProgress={technicalProgress.narrative}
+      />
+      <p className={modelIsAccessible ? 'hidden' : 'sr-only'}>
+        Boceto técnico de un escritorio minimalista de 1400 por 750 milímetros,
+        con bordes redondeados y dos cajones en el lateral derecho.
+      </p>
     </section>
   )
 }

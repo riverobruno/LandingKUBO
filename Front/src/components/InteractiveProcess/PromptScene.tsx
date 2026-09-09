@@ -1,4 +1,3 @@
-import heroImage from '@/assets/hero.png'
 import { Send } from 'lucide-react'
 import { useLayoutEffect, useRef } from 'react'
 
@@ -13,13 +12,13 @@ export interface PromptInputBounds {
 }
 
 interface PromptSceneProps {
-  furnitureOpacity: number
   inputProgress: number
   isAccessible: boolean
   onInputBoundsChange: (bounds: PromptInputBounds) => void
   outlineHandoffProgress: number
   promptContentExitProgress: number
   promptText: string
+  revealProgress: number
   surfaceExitProgress: number
   subtitleProgress: number
   titleExitProgress: number
@@ -28,13 +27,13 @@ interface PromptSceneProps {
 }
 
 function PromptScene({
-  furnitureOpacity,
   inputProgress,
   isAccessible,
   onInputBoundsChange,
   outlineHandoffProgress,
   promptContentExitProgress,
   promptText,
+  revealProgress,
   surfaceExitProgress,
   subtitleProgress,
   titleExitProgress,
@@ -55,6 +54,7 @@ function PromptScene({
     Math.min(surfaceExitProgress * 2, 1) * outlineHandoffOpacity
   const inputIsAccessible = inputProgress > 0.05 && promptContentOpacity > 0.05
   const controlsAreInteractive = inputProgress >= 1 && promptContentOpacity >= 0.999
+  const copyContrastOpacity = Math.max(titleProgress, subtitleProgress) * copyOpacity
 
   useLayoutEffect(() => {
     const inputLayout = inputLayoutRef.current
@@ -96,26 +96,24 @@ function PromptScene({
   return (
     <section
       ref={sceneRef}
-      className="absolute inset-0 z-10 overflow-hidden text-white"
+      className="absolute inset-0 z-20 overflow-hidden text-white"
       aria-labelledby="prompt-scene-title"
       aria-hidden={!isAccessible}
       inert={!isAccessible}
     >
-      <img
-        className="absolute inset-0 size-full object-cover object-[58%_center] sm:object-center"
-        src={heroImage}
-        alt=""
+      <div
+        className="pointer-events-none absolute inset-0 z-[5] bg-[radial-gradient(ellipse_52%_38%_at_center,rgba(55,34,23,0.46)_0%,rgba(55,34,23,0.2)_52%,transparent_82%)]"
         aria-hidden="true"
         style={{
-          opacity: furnitureOpacity,
-          WebkitMaskImage:
-            'radial-gradient(ellipse 35% 25% at 58% 63%, black 15%, transparent 72%)',
-          maskImage:
-            'radial-gradient(ellipse 35% 25% at 58% 63%, black 15%, transparent 72%)',
+          clipPath: `inset(${(1 - revealProgress) * 100}% 0 0)`,
+          opacity: copyContrastOpacity,
         }}
       />
 
-      <div className="relative z-10 flex size-full flex-col items-center justify-center px-5 py-16 text-center sm:px-10">
+      <div
+        className="relative z-10 flex size-full flex-col items-center justify-center px-5 py-16 text-center sm:px-10"
+        style={{ clipPath: `inset(${(1 - revealProgress) * 100}% 0 0)` }}
+      >
         <h2
           id="prompt-scene-title"
           className="font-serif text-[clamp(2.6rem,5vw,5rem)] font-normal leading-none tracking-[-0.035em] text-balance"

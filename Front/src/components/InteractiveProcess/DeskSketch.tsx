@@ -2,10 +2,12 @@ interface DeskSketchProps {
   cabinetDividerProgress: number
   deskOffsetX: number
   deskOffsetY: number
-  deskScale: number
-  isAccessible: boolean
+  deskScaleX: number
+  deskScaleY: number
   legDetailsProgress: number
   lowerDrawerProgress: number
+  opacity: number
+  principalHandoffProgress: number
   topDetailsProgress: number
   upperDrawerProgress: number
   viewportHeight: number
@@ -14,6 +16,7 @@ interface DeskSketchProps {
 
 function strokeStyle(progress: number) {
   return {
+    opacity: progress,
     strokeDasharray: 1,
     strokeDashoffset: 1 - progress,
   }
@@ -23,16 +26,18 @@ function DeskSketch({
   cabinetDividerProgress,
   deskOffsetX,
   deskOffsetY,
-  deskScale,
-  isAccessible,
+  deskScaleX,
+  deskScaleY,
   legDetailsProgress,
   lowerDrawerProgress,
+  opacity,
+  principalHandoffProgress,
   topDetailsProgress,
   upperDrawerProgress,
   viewportHeight,
   viewportWidth,
 }: DeskSketchProps) {
-  const deskTransform = `translate(${deskOffsetX} ${deskOffsetY}) scale(${deskScale})`
+  const deskTransform = `translate(${deskOffsetX} ${deskOffsetY}) scale(${deskScaleX} ${deskScaleY})`
 
   return (
     <svg
@@ -44,11 +49,20 @@ function DeskSketch({
       strokeWidth="4"
       strokeLinecap="round"
       strokeLinejoin="round"
-      role="img"
-      aria-label="Boceto lineal de un escritorio con dos cajones laterales"
-      aria-hidden={!isAccessible}
+      aria-hidden="true"
       focusable="false"
+      style={{ opacity }}
     >
+      <g
+        id="desk-principal-geometry"
+        opacity={principalHandoffProgress >= 1 ? 1 : 0}
+        transform={deskTransform}
+      >
+        <path id="desk-top-principal" d="M 430 300 H 1170" pathLength="1" />
+        <path id="desk-apron-bottom" d="M 420 415 H 980" pathLength="1" />
+        <path id="desk-left-leg-outer" d="M 400 330 V 600" pathLength="1" />
+        <path id="desk-right-leg-outer" d="M 1200 330 V 600" pathLength="1" />
+      </g>
       <g id="desk-top-details" style={strokeStyle(topDetailsProgress)} transform={deskTransform}>
         <path
           id="desk-top-left-corner"
