@@ -1,8 +1,6 @@
 export interface DemoStep {
   number: number
   label: string
-  status: string
-  currentStatus: string
 }
 
 export type DemoStepNumber = 1 | 2 | 3 | 4
@@ -14,9 +12,7 @@ export interface DemoDimension {
 
 export interface DemoDesign {
   title: string
-  status: string
   downloadFilename: string
-  description: string
   steps: DemoStep[]
   currentStep: DemoStepNumber
   version: string
@@ -30,7 +26,6 @@ export interface DemoDesign {
     cabinetLabel: string
   }
   model: {
-    status: string
     cardTitle: string
     viewportAriaLabel: string
     wardrobeLabel: string
@@ -48,12 +43,9 @@ export interface DemoSummary {
   description: string
   budget: {
     label: string
-    value: string
     note: string
   }
   fields: DemoSummaryField[]
-  quoteLabel: string
-  quoteUnavailableNote: string
   shareLabel: string
   downloadLabel: string
   downloadFilename: string
@@ -88,12 +80,12 @@ export interface DemoPrompt {
 
 export interface DemoProgressCopy {
   ariaLabel: string
-  completedLabel: string
 }
 
 export interface DemoSketchCardCopy {
   title: string
   dimensionsTitle: string
+  previousLabel: string
   nextLabel: string
   downloadLabel: string
   fullscreenLabel: string

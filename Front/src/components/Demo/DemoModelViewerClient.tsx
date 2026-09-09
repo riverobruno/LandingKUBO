@@ -43,7 +43,7 @@ function DemoModelViewerClient({ glbUrl, ariaLabel, loadingLabel, errorLabel, re
     <div className={`relative w-full overflow-hidden ${className}`}>
       <model-viewer
         ref={viewerRef}
-        className="block size-full min-h-[19rem]"
+        className="block size-full min-h-0"
         src={glbUrl}
         poster={MODEL_POSTER_URL}
         alt={ariaLabel}

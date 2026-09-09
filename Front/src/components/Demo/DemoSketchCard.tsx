@@ -27,8 +27,8 @@ function DemoSketchCard({ design, sketchImage }: DemoSketchCardProps) {
   }
 
   return (
-    <article className="overflow-hidden rounded-[1.75rem] bg-white shadow-[0_1.5rem_4rem_rgba(68,46,31,0.14)]">
-      <header className="flex items-center justify-between border-b border-stone-100 px-5 py-5 sm:px-8">
+    <article className="overflow-hidden rounded-[1.75rem] bg-white shadow-[0_1.5rem_4rem_rgba(68,46,31,0.14)] lg:grid lg:h-full lg:min-h-0 lg:grid-rows-[auto_minmax(0,1fr)_auto]">
+      <header className="flex items-center justify-between border-b border-stone-100 px-5 py-4 sm:px-8">
         <div>
           <p className="text-[0.65rem] font-semibold tracking-[0.2em] text-stone-400">{design.version}</p>
            <h2 className="mt-1 text-xl font-medium tracking-tight">{design.sketchCard.title}</h2>
@@ -42,10 +42,10 @@ function DemoSketchCard({ design, sketchImage }: DemoSketchCardProps) {
           </button>
         </div>
       </header>
-      <div ref={sketchRef} className="flex min-h-[19rem] items-center justify-center px-4 py-10 sm:min-h-[27rem] sm:px-12">
-        <WardrobeSketch imageSrc={sketchImage} ariaLabel={design.sketch.ariaLabel} cabinetLabel={design.sketch.cabinetLabel} />
+      <div ref={sketchRef} className="flex min-h-[15rem] items-center justify-center px-4 py-6 sm:min-h-[21rem] sm:px-12 lg:min-h-0 lg:py-4">
+        <div className="flex size-full min-h-0 max-w-2xl items-center justify-center"><WardrobeSketch imageSrc={sketchImage} ariaLabel={design.sketch.ariaLabel} cabinetLabel={design.sketch.cabinetLabel} /></div>
       </div>
-      <footer className="flex flex-wrap items-end justify-between gap-5 border-t border-stone-100 px-5 py-6 sm:px-8">
+      <footer className="flex flex-wrap items-end justify-between gap-5 border-t border-stone-100 px-5 py-6 sm:px-8 lg:py-4">
         <div>
            <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-stone-400">{design.sketchCard.dimensionsTitle}</h3>
           <dl className="mt-3 flex flex-wrap gap-x-7 gap-y-2">

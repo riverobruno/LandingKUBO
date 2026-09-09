@@ -1,8 +1,6 @@
 {
   "title": "Placard",
-  "status": "Boceto 2D - Requiere revisión",
   "downloadFilename": "placard-boceto.svg",
-  "description": "Revisá el boceto y confirmá las medidas antes de avanzar al modelo 3D.",
   "currentStep": 2,
   "prompt": {
     "heading": "¿Qué te gustaría diseñar hoy?",
@@ -23,10 +21,11 @@
       "Me gustaría una biblioteca liviana para el living, con espacios abiertos para decoración y guardado cerrado abajo."
     ]
   },
-  "progress": { "ariaLabel": "Progreso del diseño", "completedLabel": "Completada" },
+  "progress": { "ariaLabel": "Progreso del diseño" },
   "sketchCard": {
     "title": "Boceto actual",
     "dimensionsTitle": "Medidas actuales",
+    "previousLabel": "Anterior",
     "nextLabel": "Siguiente",
     "downloadLabel": "Descargar boceto en SVG",
     "fullscreenLabel": "Ver boceto en pantalla completa",
@@ -40,10 +39,10 @@
     "unavailableLabel": "Vista de resultado no disponible"
   },
   "steps": [
-    { "number": 1, "label": "Idea", "status": "Completada", "currentStatus": "Completada" },
-    { "number": 2, "label": "Boceto 2D", "status": "Completada", "currentStatus": "Requiere revisión" },
-    { "number": 3, "label": "Modelo 3D", "status": "Próximo", "currentStatus": "Listo para revisar" },
-    { "number": 4, "label": "Resumen", "status": "Próximo", "currentStatus": "Próximo" }
+    { "number": 1, "label": "Idea" },
+    { "number": 2, "label": "Boceto 2D" },
+    { "number": 3, "label": "Modelo 3D" },
+    { "number": 4, "label": "Resumen" }
   ],
   "version": "VERSIÓN 1",
   "dimensions": [
@@ -56,7 +55,6 @@
     "cabinetLabel": "Placard"
   },
   "model": {
-    "status": "Modelo 3D - Requiere revisión",
     "cardTitle": "Modelo 3D",
     "viewportAriaLabel": "Vista previa del modelo 3D del placard",
     "wardrobeLabel": "Modelo 3D de un placard en perspectiva",
@@ -71,7 +69,6 @@
     "description": "Necesito un placard para una habitación chica, con puertas corredizas y espacio para ropa larga.",
     "budget": {
       "label": "PRESUPUESTO ESTIMADO",
-      "value": "$ 385.000",
       "note": "Total estimado orientativo sujeto a revisión final de materiales y medidas."
     },
     "fields": [
@@ -79,8 +76,6 @@
       { "label": "Estilo", "value": "Moderno y funcional" },
       { "label": "Medidas", "value": "120 cm × 200 cm × 55 cm" }
     ],
-    "quoteLabel": "Solicitar cotización final",
-    "quoteUnavailableNote": "La solicitud final todavía no está habilitada. Un asesor va a revisar la propuesta antes de confirmar el valor.",
     "shareLabel": "Compartir",
     "downloadLabel": "Descargar propuesta",
     "downloadFilename": "placard-propuesta.json",

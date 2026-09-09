@@ -56,7 +56,7 @@ function DesignPreview({ design, sketchImage, glbUrl, onPreviewLabelChange }: De
       </header>
 
       {tab === '2d' ? (
-        <div ref={fullscreenRef} className="relative flex min-h-[28rem] items-center justify-center bg-[#fcfaf7] px-5 py-14 sm:min-h-[38rem] sm:px-12" role="tabpanel" id="design-panel-2d" aria-labelledby="design-tab-2d">
+        <div ref={fullscreenRef} className="relative flex min-h-[28rem] items-center justify-center bg-[#fcfaf7] px-5 py-14 sm:min-h-[38rem] sm:px-12 lg:min-h-[26rem] lg:px-8 lg:py-4" role="tabpanel" id="design-panel-2d" aria-labelledby="design-tab-2d">
           <span className="absolute left-5 top-5 rounded-full bg-[#ded0c1] px-3 py-1.5 text-[0.62rem] font-bold tracking-[0.16em] text-stone-700 sm:left-7">{preview.approvedLabel}</span>
           <button className="absolute right-5 top-4 inline-flex min-h-11 items-center gap-2 rounded-full border border-stone-300 bg-white/70 px-4 text-xs font-medium text-stone-700 outline-none hover:bg-white focus-visible:ring-2 focus-visible:ring-stone-900 sm:right-7" type="button" onClick={() => { if (fullscreenRef.current && document.fullscreenEnabled) void fullscreenRef.current.requestFullscreen().catch(() => undefined) }}>
             <Maximize2 size={15} aria-hidden="true" />{preview.enlargeLabel}
@@ -64,8 +64,8 @@ function DesignPreview({ design, sketchImage, glbUrl, onPreviewLabelChange }: De
            <div className="w-full max-w-3xl"><WardrobeSketch imageSrc={sketchImage} ariaLabel={design.sketch.ariaLabel} cabinetLabel={design.sketch.cabinetLabel} /></div>
         </div>
       ) : (
-          <div ref={fullscreenRef} className="relative flex min-h-[28rem] items-center justify-center overflow-hidden bg-[#eee5db] px-5 py-14 sm:min-h-[38rem] sm:px-12" role="tabpanel" id="design-panel-3d" aria-labelledby="design-tab-3d">
-           <div className="w-full max-w-3xl"><DemoModelViewer glbUrl={glbUrl} ariaLabel={design.model.viewportAriaLabel} loadingLabel={design.model.loadingLabel} errorLabel={design.model.loadErrorLabel} resetSignal={resetSignal} className="h-[28rem] sm:h-[38rem]" /></div>
+           <div ref={fullscreenRef} className="relative flex min-h-[28rem] items-center justify-center overflow-hidden bg-[#eee5db] px-5 py-14 sm:min-h-[38rem] sm:px-12 lg:min-h-[26rem] lg:px-8 lg:py-4" role="tabpanel" id="design-panel-3d" aria-labelledby="design-tab-3d">
+            <div className="w-full max-w-3xl"><DemoModelViewer glbUrl={glbUrl} ariaLabel={design.model.viewportAriaLabel} loadingLabel={design.model.loadingLabel} errorLabel={design.model.loadErrorLabel} resetSignal={resetSignal} className="h-[28rem] sm:h-[38rem] lg:h-[24rem]" /></div>
            <div className="absolute bottom-5 z-[1] flex flex-wrap items-center justify-center gap-2"><span className="rounded-full bg-white/75 px-4 py-2 text-xs text-stone-600">{preview.interactionHint}</span><button className="inline-flex min-h-11 items-center gap-2 rounded-full bg-white/80 px-4 text-xs font-medium text-stone-700 outline-none hover:bg-white focus-visible:ring-2 focus-visible:ring-stone-900" type="button" onClick={resetView}><RotateCcw size={14} aria-hidden="true" />{preview.resetViewLabel}</button></div>
          </div>
       )}

@@ -5,7 +5,7 @@ interface WardrobeSketchProps {
 }
 
 function WardrobeSketch({ imageSrc, ariaLabel, cabinetLabel }: WardrobeSketchProps) {
-  return <img src={imageSrc} role="img" aria-label={ariaLabel} title={cabinetLabel} alt={ariaLabel} className="h-auto w-full max-w-3xl" />
+  return <img src={imageSrc} role="img" aria-label={ariaLabel} title={cabinetLabel} alt={ariaLabel} className="block h-auto max-h-full min-h-0 w-full max-w-3xl object-contain" />
 }
 
 export default WardrobeSketch
