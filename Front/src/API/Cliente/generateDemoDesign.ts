@@ -48,11 +48,9 @@ export async function generateDemoDesign(request: DemoDesignRequest): Promise<De
     throw new Error('A non-empty demo prompt is required')
   }
 
-  const baseUrl = (import.meta.env.VITE_API_URL?.trim() || 'http://localhost:3000').replace(/\/+$/, '')
-  const url = new URL(`${baseUrl}/demo/design`)
-  url.searchParams.set('prompt', request.prompt)
+  const params = new URLSearchParams({ prompt: request.prompt })
 
-  const response = await fetch(url.toString())
+  const response = await fetch(`/api/demo/design?${params.toString()}`)
   if (!response.ok) {
     throw new Error(`Failed to generate demo design: ${response.status}`)
   }

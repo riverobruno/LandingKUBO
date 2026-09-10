@@ -49,11 +49,9 @@ export async function generateDemoModel(request: DemoModelRequest): Promise<Demo
     throw new Error('A non-empty demo model name and 2D image are required')
   }
 
-  const baseUrl = (import.meta.env.VITE_API_URL?.trim() || 'http://localhost:3000').replace(/\/+$/, '')
-  const url = new URL(`${baseUrl}/demo/model`)
-  url.searchParams.set('name', request.name)
+  const params = new URLSearchParams({ name: request.name })
 
-  const response = await fetch(url.toString())
+  const response = await fetch(`/api/demo/model?${params.toString()}`)
   if (!response.ok) {
     throw new Error(`Failed to generate demo model: ${response.status}`)
   }
