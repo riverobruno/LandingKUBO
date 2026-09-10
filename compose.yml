@@ -9,3 +9,8 @@ services:
       context: ./Front
     ports:
       - "8080:80"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
