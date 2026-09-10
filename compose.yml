@@ -8,7 +8,7 @@ services:
     build:
       context: ./Front
     ports:
-      - "8080:80"
+      - "8080:8080"
 
   redis:
     image: redis:7-alpine

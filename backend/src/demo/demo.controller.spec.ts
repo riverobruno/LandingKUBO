@@ -21,9 +21,25 @@ describe('DemoController', () => {
     await app?.close();
   });
 
-  it('should return HTTP 200 on GET /demo/design', async () => {
+  it('should return the demo design on GET /demo/design', async () => {
     await request(app.getHttpServer())
       .get('/demo/design')
-      .expect(200);
+      .expect(200)
+      .expect(({ body }) => {
+        if (body.name !== 'Placard' || body.measurements.length !== 3) {
+          throw new Error('Unexpected demo design response');
+        }
+      });
+  });
+
+  it('should return the demo model on GET /demo/model', async () => {
+    await request(app.getHttpServer())
+      .get('/demo/model')
+      .expect(200)
+      .expect(({ body }) => {
+        if (body.glbUrl !== '/ropero-propuesta.glb' || body.budget?.currency !== 'ARS') {
+          throw new Error('Unexpected demo model response');
+        }
+      });
   });
 });

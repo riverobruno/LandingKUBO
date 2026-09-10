@@ -7,7 +7,7 @@ WORKDIR /app
 # Copiamos primero los manifiestos para aprovechar la caché de Docker
 # mientras no cambien las dependencias.
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm ci --ignore-scripts
 
 # Etapa de compilación: genera el JavaScript que ejecutará producción.
 FROM node:22-alpine AS build
@@ -29,7 +29,7 @@ WORKDIR /app
 
 COPY package.json package-lock.json ./
 # Instalamos solo las dependencias necesarias durante la ejecución.
-RUN npm ci --omit=dev
+RUN npm ci --ignore-scripts --omit=dev
 
 # Etapa final: contiene solamente el código compilado y sus dependencias runtime.
 FROM node:22-alpine AS runtime
