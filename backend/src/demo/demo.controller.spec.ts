@@ -4,6 +4,7 @@ import request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from '../app.module';
+import { RedisService } from '../redis/redis.service';
 
 describe('DemoController', () => {
   let app: INestApplication;
@@ -15,6 +16,11 @@ describe('DemoController', () => {
 
     app = moduleRef.createNestApplication();
     await app.init();
+
+    const redisService = app.get(RedisService);
+    await redisService.del('demo:design:default');
+    await redisService.del('demo:model:default');
+    await redisService.del('demo:design:escritorio');
   });
 
   after(async () => {
@@ -41,5 +47,31 @@ describe('DemoController', () => {
           throw new Error('Unexpected demo model response');
         }
       });
+  });
+
+  it('should cache and return responses on subsequent reads', async () => {
+    const res1 = await request(app.getHttpServer())
+      .get('/demo/design?prompt=escritorio')
+      .expect(200);
+
+    const res2 = await request(app.getHttpServer())
+      .get('/demo/design?prompt=escritorio')
+      .expect(200);
+
+    if (res1.body.name !== res2.body.name) {
+      throw new Error('Cached response mismatch');
+    }
+
+    const model1 = await request(app.getHttpServer())
+      .get('/demo/model?name=placard')
+      .expect(200);
+
+    const model2 = await request(app.getHttpServer())
+      .get('/demo/model?name=placard')
+      .expect(200);
+
+    if (model1.body.glbUrl !== model2.body.glbUrl) {
+      throw new Error('Cached model response mismatch');
+    }
   });
 });

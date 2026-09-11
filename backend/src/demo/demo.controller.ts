@@ -10,12 +10,12 @@ export class DemoController {
   ) {}
 
   @Get('design')
-  getDesign(@Query('prompt') prompt?: string) {
+  async getDesign(@Query('prompt') prompt?: string) {
     return this.demoDesignService.getDesign(prompt);
   }
 
   @Get('model')
-  getModel(@Query('name') name?: string) {
+  async getModel(@Query('name') name?: string) {
     return this.demoModelService.getModel(name);
   }
 }
