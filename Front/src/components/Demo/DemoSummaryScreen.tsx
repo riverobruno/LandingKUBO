@@ -31,8 +31,9 @@ function DemoSummaryScreen({ design, sketchImage, glbUrl, modelBudget, title, on
       try {
         await navigator.share({ title, text: summary.heading, url: window.location.href })
         setFeedback(summary.feedback.shareSuccess)
-      } catch {
-        return
+      } catch (error) {
+        const name = error instanceof DOMException ? error.name : ''
+        setFeedback(name === 'AbortError' ? summary.feedback.shareCancelled : name === 'NotAllowedError' ? summary.feedback.shareDenied : summary.feedback.shareDenied)
       }
       return
     }
