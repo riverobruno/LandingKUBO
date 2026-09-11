@@ -11,6 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1, sugerido por SAST el usar para este y los demás el SHA completo
+      - name: Build frontend test image
+        run: docker build --file Front/Dockerfile --target build --tag frontend-test Front
+      - name: Run frontend tests
+        run: docker run --rm frontend-test npm run test:run
       - name: Build backend test image
         run: docker build --file backend/Dockerfile --target build --tag backend-test backend
       - name: Run backend tests
