@@ -12,35 +12,44 @@ jobs:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1, sugerido por SAST el usar para este y los demás el SHA completo
       - name: Build frontend test image
         run: docker build --file Front/Dockerfile --target build --tag frontend-test Front
-      - name: Run frontend coverage
+      # El siguiente paso está porque SonarQube resuelve el path de los reportes de cobertura de código desde la raíz del repositorio
+      # mientras que los reportes usan rutas relativas al frontend y backend.
+      - name: Run frontend coverage 
         run: |
-          docker run --name frontend-coverage frontend-test npm run test:coverage -- --coverage.clean=false
+          docker run --name frontend-coverage frontend-test npm run test:coverage
           mkdir -p Front/coverage
           docker cp frontend-coverage:/app/coverage/lcov.info Front/coverage/lcov.info
           sed -i 's#SF:src/#SF:Front/src/#g' Front/coverage/lcov.info
+      # Hay que pasarle a SonarQube Cloud el archivo de reporte de cobertura de código porque no los genera él, y si no lo hacés
+      # siempre va a creer que la cobertura del código nuevo es 0%
       - name: Upload frontend coverage artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: frontend-coverage
           path: Front/coverage/lcov.info
           if-no-files-found: error
+
       - name: Remove frontend coverage container
         if: always()
         run: docker rm frontend-coverage
+
       - name: Build backend test image
         run: docker build --file backend/Dockerfile --target build --tag backend-test backend
+
       - name: Run backend coverage
         run: |
           docker run --name backend-coverage backend-test npm run test:coverage
           mkdir -p backend/coverage
           docker cp backend-coverage:/app/coverage/lcov.info backend/coverage/lcov.info
           sed -i 's#SF:src/#SF:backend/src/#g' backend/coverage/lcov.info
+
       - name: Upload backend coverage artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: backend-coverage
           path: backend/coverage/lcov.info
           if-no-files-found: error
+
       - name: Remove backend coverage container
         if: always()
         run: docker rm backend-coverage
@@ -53,16 +62,19 @@ jobs:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
       - name: Download frontend coverage artifact
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: frontend-coverage
           path: Front/coverage
+
       - name: Download backend coverage artifact
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: backend-coverage
           path: backend/coverage
+          
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@7006c4492b2e0ee0f816d36501671557c97f5995 # v8.1.0
         with:
