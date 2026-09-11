@@ -6,10 +6,8 @@ import type { DemoDesign } from './types'
 
 vi.mock('./DesignPreview', () => ({ default: () => <div>Vista previa</div> }))
 vi.mock('./ProposalSummary', () => ({ default: () => <div>Resumen de propuesta</div> }))
-
 const design = demoDesign as DemoDesign
 const modelBudget = { amount: 385000, currency: 'ARS' }
-
 function renderSummary(onTitleChange = vi.fn(), onPrevious = vi.fn()) {
   return render(
     <DemoSummaryScreen
