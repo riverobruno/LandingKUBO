@@ -10,7 +10,7 @@ vi.mock('./ProposalSummary', () => ({ default: () => <div>Resumen de propuesta</
 const design = demoDesign as DemoDesign
 const modelBudget = { amount: 385000, currency: 'ARS' }
 
-function renderSummary() {
+function renderSummary(onTitleChange = vi.fn(), onPrevious = vi.fn()) {
   return render(
     <DemoSummaryScreen
       design={design}
@@ -18,8 +18,8 @@ function renderSummary() {
       glbUrl="/model.glb"
       modelBudget={modelBudget}
       title="Placard"
-      onTitleChange={vi.fn()}
-      onPrevious={vi.fn()}
+      onTitleChange={onTitleChange}
+      onPrevious={onPrevious}
     />,
   )
 }
@@ -91,5 +91,35 @@ describe('DemoSummaryScreen sharing feedback', () => {
     fireEvent.click(screen.getByRole('button', { name: design.summary.downloadLabel }))
 
     expect((await screen.findByRole('status')).textContent).toBe(design.summary.feedback.downloadSuccess)
+  })
+
+  it('shows download unavailable when preparing the proposal fails', async () => {
+    vi.stubGlobal('URL', {
+      createObjectURL: vi.fn().mockReturnValue('blob:test'),
+      revokeObjectURL: vi.fn(),
+    })
+    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {
+      throw new Error('Download unavailable')
+    })
+    renderSummary()
+
+    fireEvent.click(screen.getByRole('button', { name: design.summary.downloadLabel }))
+
+    expect((await screen.findByRole('status')).textContent).toBe(design.summary.feedback.downloadUnavailable)
+  })
+
+  it('allows editing the title and navigating to the previous screen', () => {
+    const onTitleChange = vi.fn()
+    const onPrevious = vi.fn()
+    renderSummary(onTitleChange, onPrevious)
+
+    fireEvent.click(screen.getByRole('button', { name: design.result.editButtonLabel }))
+    const titleInput = screen.getByRole('textbox', { name: design.result.editTitleLabel })
+    fireEvent.change(titleInput, { target: { value: 'Nuevo título' } })
+    fireEvent.blur(titleInput)
+    fireEvent.click(screen.getByRole('button', { name: design.sketchCard.previousLabel }))
+
+    expect(onTitleChange).toHaveBeenCalledWith('Nuevo título')
+    expect(onPrevious).toHaveBeenCalledOnce()
   })
 })
