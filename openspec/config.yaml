@@ -1,13 +1,49 @@
 schema: spec-driven
+strict_tdd: true
 
 context: |
-  KUBO is an AI-powered web application that turns a furniture idea into a project ready for quotation and manufacturing. The landing experience introduces KUBO and attracts potential customers from a broad public audience. All product-facing UI and copy must be Spanish-only; OpenSpec technical artifacts must be written in English.
+  KUBO is an AI-powered web application that turns a furniture idea into a project ready for quotation and manufacturing. Product-facing UI and copy MUST be Spanish-only; OpenSpec technical artifacts MUST be written in English.
+  The implemented repository contains a React frontend in Front/ and a NestJS demo backend in backend/, plus Docker Compose, Nginx, GitHub Actions, and SonarCloud configuration. Distinguish implemented behavior from planned system capabilities.
+  The frontend uses React 19, TypeScript 6, Vite 8, Tailwind CSS 4, React Router, centralized routes, ClienteLayout, feature-oriented components, and native-fetch API modules.
+  Front/rules.md is mandatory frontend guidance, including target authentication and API conventions; those conventions are not evidence that unimplemented auth or broader domain capabilities exist.
+  The backend is a small NestJS modular application currently centered on DemoModule and demo endpoints. Do not infer backend, database, deployment, or infrastructure choices beyond repository evidence or an approved change.
+  Verification currently combines backend node:test execution, frontend/backend TypeScript builds, and frontend ESLint; no coverage tool, formatter, frontend test runner, or E2E tool is configured.
 
-  Scope covers the full planned LandingKUBO system. Clearly distinguish implemented capabilities from planned backend or infrastructure work. Do not infer or select backend, database, deployment, or infrastructure technologies unless an approved change defines them.
-
-  The only implemented application is an early/starter frontend under Front/, using npm, React 19, TypeScript 6, Vite 8, and Tailwind CSS 4. Front/rules.md defines mandatory frontend target conventions, including centralized routing and layouts, feature-oriented pages and components, isolated native-fetch API calls, memory-only access tokens with backend-managed HttpOnly refresh cookies, Tailwind-first UI, and @/ imports. These conventions are not evidence that the corresponding dependencies, configuration, folders, authentication, API layer, backend, or infrastructure already exist.
-
-  No automated test framework or formatter is configured. Do not require automated tests until a test runner is introduced by an approved change. Current frontend verification is: cd Front && npm run build, then cd Front && npm run lint.
+testing:
+  detected: 2026-09-10
+  strict_tdd: true
+  test_runner:
+    backend:
+      command: "cd backend && npm test"
+      framework: "Node.js built-in test runner (node:test)"
+      support: "Nest Testing and Supertest"
+    frontend:
+      command: null
+      framework: null
+  test_layers:
+    unit:
+      available: true
+      tool: "node:test (backend capability)"
+    integration:
+      available: true
+      tool: "Nest Testing + Supertest (backend)"
+    e2e:
+      available: false
+      tool: null
+  coverage:
+    available: false
+    command: null
+  quality_tools:
+    linter:
+      frontend: "cd Front && npm run lint"
+      backend: null
+    type_checker:
+      frontend: "cd Front && npm run build"
+      backend: "cd backend && npm run build"
+    formatter: null
+  build:
+    frontend: "cd Front && npm run build"
+    backend: "cd backend && npm run build"
 
 rules:
   proposal:
@@ -24,5 +60,17 @@ rules:
   tasks:
     - Organize tasks into small, dependency-ordered, verifiable implementation units with concrete file or area references.
     - Include cd Front && npm run build and cd Front && npm run lint when frontend files are affected.
-    - Do not require automated tests unless the change first introduces and configures a test runner.
+    - Apply strict TDD where an applicable test runner exists; do not require automated frontend tests until a frontend test runner is introduced.
     - Do not add formatter steps while no formatter is configured.
+  apply:
+    guidelines:
+      - Follow existing frontend and backend patterns and preserve the current repository state unless the approved change requires otherwise.
+      - Do not recreate reverted post-SAST changes as part of unrelated work.
+    tdd: true
+    test_command: "cd backend && npm test"
+  verify:
+    test_command: "cd backend && npm test"
+    build_command: "cd Front && npm run build && cd ../backend && npm run build"
+    coverage_threshold: 0
+  archive:
+    - Preserve the change folder as an audit trail and warn before merging destructive deltas.
