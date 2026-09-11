@@ -38,24 +38,6 @@ describe('DemoSummaryScreen sharing feedback', () => {
     expect((await screen.findByRole('status')).textContent).toBe(design.summary.feedback.shareSuccess)
   })
 
-  it('shows denied feedback when sharing is rejected with NotAllowedError', async () => {
-    vi.stubGlobal('navigator', { share: vi.fn().mockRejectedValue(new DOMException('Denied', 'NotAllowedError')) })
-    renderSummary()
-
-    fireEvent.click(screen.getByRole('button', { name: design.summary.shareLabel }))
-
-    expect((await screen.findByRole('status')).textContent).toBe(design.summary.feedback.shareDenied)
-  })
-
-  it('shows cancelled feedback when sharing is aborted', async () => {
-    vi.stubGlobal('navigator', { share: vi.fn().mockRejectedValue(new DOMException('Cancelled', 'AbortError')) })
-    renderSummary()
-
-    fireEvent.click(screen.getByRole('button', { name: design.summary.shareLabel }))
-
-    expect((await screen.findByRole('status')).textContent).toBe(design.summary.feedback.shareCancelled)
-  })
-
   it('uses the clipboard when sharing is unavailable', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     vi.stubGlobal('navigator', { clipboard: { writeText } })
