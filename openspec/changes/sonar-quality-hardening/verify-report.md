@@ -1,181 +1,147 @@
 ```yaml
 schema: gentle-ai.verify-result/v1
-evidence_revision: sha256:e8fb99462b7960ddf756bb81c57ae9cd02991b64d78808b580bfcf0a6a85ab88
+evidence_revision: sha256:a1484e7a22940ba32024f585906c26c6bf9dbe19a962504ca8215063d18fd0de
 verdict: fail
 blockers: 0
-critical_findings: 0
-requirements: 4/5
-scenarios: 7/8
-test_command: npm --prefix backend test && npm --prefix Front run test:run
+critical_findings: 1
+requirements: 1/1
+scenarios: 2/2
+test_command: "cd backend && npm test"
 test_exit_code: 0
-test_output_hash: sha256:6ef85a3008cf95231de1afa4bc2fce256b96ef48abaab66ab4f2017f8d7f0be2
-build_command: npm --prefix Front run build && npm --prefix backend run build
+test_output_hash: sha256:c25439143589aa5f0b488eb785b93bbff3b70127b4d55514fe6a264ccfa15c06
+build_command: "cd Front && npm run build && cd ../backend && npm run build"
 build_exit_code: 0
-build_output_hash: sha256:0d7ccb03c0c523d7c7ad76c2552f7dccc3c6fee15bd9ac05ffdd8203fbb93418
+build_output_hash: sha256:57ef4acffd324264fdd8458adf18d4ccda7da081c20f51516781bae602b39e3e
 ```
 
 ## Verification Report
 
 **Change**: `sonar-quality-hardening`  
 **Version**: N/A  
-**Mode**: Strict TDD
+**Mode**: Strict TDD (configuration-only verification)
 
 ### Executive Summary
 
-The 13 implementation tasks are complete, and independent local verification passed for immutable workflow references, hardened Docker installs/runtime, frontend/backend tests, coverage generation, LCOV normalization, Compose proxy behavior, and publish ordering. The verdict is **FAIL** only because no remote SonarCloud workflow result or resulting Quality Gate was available; local evidence proves the transport and gives 100% coverage for the only changed production line, but cannot prove the remote new-code rating required by the specification.
+The corrected workflow contains exactly the six required Docker action references pinned to the specified full 40-character SHAs, preserves the checkout and Sonar pins, and adds no workflow steps. All applicable structural, build, test, lint, and whitespace checks passed. Verification is **FAIL** because Strict TDD verification requires a `TDD Cycle Evidence` table in `apply-progress.md`, and that table is absent; this is a process-evidence failure, not a SHA or CI-scope failure.
 
 ### Completeness
 
 | Metric | Value |
 |---|---:|
-| Tasks total | 13 |
-| Tasks complete | 13 |
+| Tasks total | 5 |
+| Tasks complete | 5 |
 | Tasks incomplete | 0 |
 | Proposal/spec/design/tasks/apply artifacts | Present and read |
-| Verification report before this run | Missing, as expected |
+| Prior verification report | Present and read; superseded by this candidate |
+| Review workload | Single-pr / low-risk; 400-line budget |
 
-### Build, Tests, and Runtime Evidence
+### Build & Tests Execution
 
 | Check | Command or harness | Exit | Output hash |
 |---|---|---:|---|
-| Backend tests | `npm --prefix backend test` | 0 | `sha256:f1b503f980eb130d43a2589299c20efe3d8f960239adc5d228223a79c6474f4e` |
-| Frontend tests | `npm --prefix Front run test:run` | 0 | `sha256:6c7ef6f6139106f34964c7b3c01e4ed294645931efbf6d8fb15ef9d46d2095b5` |
-| Combined test command in envelope | `npm --prefix backend test && npm --prefix Front run test:run` | 0 | `sha256:6ef85a3008cf95231de1afa4bc2fce256b96ef48abaab66ab4f2017f8d7f0be2` |
-| Frontend coverage | `npm --prefix Front run test:coverage` | 0 | `sha256:e183de58b32acf5c484dc808063e36844f0f9c01966761677ee52d45896a342c` |
-| Backend coverage | `npm --prefix backend run test:coverage` | 0 | `sha256:4f53dc87bd6d8e31da5ee70b874f50cdf4549291b68341b7ba674ad06e03f7b8` |
-| Combined build command in envelope | `npm --prefix Front run build && npm --prefix backend run build` | 0 | `sha256:0d7ccb03c0c523d7c7ad76c2552f7dccc3c6fee15bd9ac05ffdd8203fbb93418` |
-| Frontend lint | `npm --prefix Front run lint` | 0 | `sha256:bcb58e8664410962f59d63ad933862fa4169fcdd6c40e7430eeaafbfa4bb6307` |
-| Docker builds | Frontend build target and backend build target | 0 | Front `sha256:a60db01a5bee373e36b603c11946238cb30e2ccc8aff8eb37522a07d330043af`; backend `sha256:b0dac02e30c9eea1dd1a7d5c6fe8f862b0086a3a4a8f6f750a63fa2c8cb30bee` |
-| Compose configuration | `docker compose config` | 0 | `sha256:4db9bccbc5d8384b6554f5cedf104ffa7c4f1fcad5be1c5dbc4011c50c64942b` |
-| Compose runtime harness | `docker compose up -d --build`, UID/port/SPA/proxy checks, cleanup | 0 | `sha256:68edceae95f2685dd0851c596daf47422938f956084a39812885bb722f29c439` |
-| Container coverage transport | Disposable containers, `docker cp` before removal, normalization, both preflights | 0 | `sha256:c336141dfffcf44d8ccf75c5bbcf0c4e0ca51e1b9b36e8b16fa25c66d7cf7578` |
-| Workflow YAML parse | PyYAML parse of `.github/workflows/ci.yml` | 0 | `sha256:b88d091978302f3978b2850678e974d93d5d7419ab2738842f3c4be8b4a2476a` |
-| Diff whitespace check | `git diff --check` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| Structural verification | `python3 -` (exact-reference, scope, YAML, and negative-fixture verifier) | 0 | `sha256:47f563d98395fcbdf082ef3cd366ab6db35064156580442f5753e79c5c62b7f5` |
+| Backend test command | `cd backend && npm test` | 0 | `sha256:c25439143589aa5f0b488eb785b93bbff3b70127b4d55514fe6a264ccfa15c06` |
+| Build command | `cd Front && npm run build && cd ../backend && npm run build` | 0 | `sha256:57ef4acffd324264fdd8458adf18d4ccda7da081c20f51516781bae602b39e3e` |
+| Frontend lint | `cd Front && npm run lint` | 0 | `sha256:bcb58e8664410962f59d63ad933862fa4169fcdd6c40e7430eeaafbfa4bb6307` |
+| Whitespace validation | `git diff --check` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| Workflow linter | `actionlint` | N/A | N/A — unavailable locally |
 
-Test execution produced 12 passing frontend tests in 3 files and 2 passing backend route tests. The full local frontend line coverage is 12.28% (11.57% statements), because the configured include scope contains the broader untested application; changed production-line coverage is 1/1 (100%). Backend coverage is 96.46% statements/lines and 86.66% branches. The changed `DemoSummaryScreen.tsx` file is 92.1% covered by lines, with the changed line 36 covered.
+The structural verifier parsed the workflow YAML, found six covered Docker action occurrences, confirmed exact SHA values and 40-character format, preserved checkout/Sonar pins, confirmed identity-only Sonar properties, confirmed no workflow working-tree additions, and rejected mutable, wrong-SHA, and extra-step fixtures. The backend command passed 2 tests. The build command passed frontend and backend TypeScript/build steps. No dedicated workflow test runner, coverage command, runtime harness, LCOV generation, artifact transfer, or remote analysis was applicable to this narrowed configuration-only change.
 
-### Security and CI Findings
+### Coverage
 
-- The six formerly mutable Docker action occurrences are now full 40-character SHAs; the two newly added artifact action references are also full SHAs. Independent `git ls-remote` validation matched all six selected action SHAs to their declared tags. Existing checkout and Sonar pins remain unchanged.
-- The three Docker `npm ci` operations are hardened: one in `Front/Dockerfile` and two in `backend/Dockerfile`, all with `--ignore-scripts`; both package-level `npm ci --ignore-scripts --dry-run` checks passed.
-- The frontend runtime image is `nginxinc/nginx-unprivileged` pinned by digest, defaults to UID 101, exposes/listens on 8080, and serves the Compose mapping `8080:8080`.
-- The backend runtime image defaults to the non-root `node` user (observed UID 1000 in the local image).
-- Compose runtime checks passed for SPA fallback at `/demo`, frontend UID 101, internal listener 8080, and `/api/demo/design?prompt=desk` returning `name: Placard` through Nginx proxying.
-
-### Coverage and LCOV Transport
-
-The exact disposable-container flow passed. Frontend coverage generated 32 source entries and backend coverage generated 6; `docker cp` occurred before cleanup. Normalization produced only `Front/src/...` and `backend/src/...` `SF:` paths. The normalized-report preflight and the Sonar-input preflight both passed. Independent negative fixtures confirmed rejection of a mutable action, a missing LCOV report, and an unnormalized LCOV path.
-
-`sonar-project.properties` points Sonar at `Front/src,backend/src`, identifies the test patterns, and consumes `coverage/frontend/lcov.info,coverage/backend/lcov.info` without coverage exclusions. The workflow downloads the artifact and runs the Sonar LCOV preflight before the scan.
-
-The local changed-line approximation is 100% (1/1) and exceeds the 80% new-code target. No remote SonarCloud execution was available, so the actual Sonar new-code coverage metric and Quality Gate remain unverified rather than claimed.
-
-### Publish Gating
-
-Static workflow checks passed: `publish` has `needs: sonarqube`, the Sonar scan uses `-Dsonar.qualitygate.wait=true`, the publish job is restricted to pushes to `main`, and Sonar coverage download/preflight precedes the scan. No image was pushed during verification.
+Not applicable. The cached SDD initialization context reports no coverage tool, and this change modifies no production or test source file. No coverage or LCOV step was added or executed.
 
 ### Spec Compliance Matrix
 
-| Requirement | Scenario | Runtime evidence | Result |
+| Requirement | Scenario | Test | Result |
 |---|---|---|---|
-| R1 Workflow actions are immutable | Workflow passes immutable-reference validation | `workflow-static`, remote tag/SHA validation, workflow YAML parse | ✅ COMPLIANT |
-| R1 Workflow actions are immutable | Mutable reference is introduced | `negative-preflight-fixtures` rejected a mutable fixture | ✅ COMPLIANT |
-| R2 Dependency installation and frontend runtime are hardened | Hardened containers operate normally | Docker builds, `npm ci --ignore-scripts --dry-run`, Compose runtime harness | ✅ COMPLIANT |
-| R2 Dependency installation and frontend runtime are hardened | Runtime hardening breaks a required contract | Runtime harness asserts UID 101, 8080, SPA, and proxied payload | ✅ COMPLIANT |
-| R3 Sonar receives real normalized coverage | Coverage reaches Sonar correctly | Disposable coverage flow, 32/6 normalized entries, Sonar preflight, changed-line calculation | ⚠️ PARTIAL — no remote Sonar run or measured Quality Gate |
-| R3 Sonar receives real normalized coverage | Coverage is absent or package-relative | Normalized preflight plus missing/unnormalized negative fixtures | ✅ COMPLIANT |
-| R4 Existing API and user feedback remain equivalent | Existing flows retain behavior | 6 API-client tests, 6 DemoSummary interaction tests, and Compose proxy response | ✅ COMPLIANT |
-| R5 Evidenced redundant conditional is removed | Reliability correction is behavior-preserving | 6 success/rejection/fallback/download tests and changed source inspection | ✅ COMPLIANT |
+| R1 The six Docker action references are immutable | The six substitutions pass validation | `python3 -` structural verifier: exact six-occurrence and full-SHA assertions passed | ✅ COMPLIANT |
+| R1 The six Docker action references are immutable | An out-of-scope or mutable reference is introduced | `python3 -` structural verifier: mutable, wrong-SHA, and extra-step fixtures were rejected | ✅ COMPLIANT |
 
-**Compliance summary**: 7/8 scenarios fully compliant; 1/8 partial due to unavailable remote evidence.
+**Compliance summary**: 2/2 scenarios compliant; 1/1 requirement complete.
 
 ### Correctness (Static Evidence)
 
 | Requirement | Status | Notes |
 |---|---|---|
-| R1 Immutable workflow actions | ✅ Implemented | Six former mutable Docker references and two artifact references use validated full SHAs. |
-| R2 Hardened installation and frontend runtime | ✅ Implemented | All three installs ignore lifecycle scripts; non-root Nginx, port 8080, external mapping, and proxy behavior passed. |
-| R3 Real normalized coverage to Sonar | ⚠️ Partially evidenced | Real LCOV is generated, copied before cleanup, normalized, preflighted, and configured for Sonar; remote coverage/Gate was not run. |
-| R4 API and user feedback equivalence | ✅ Implemented | Existing relative API routes, proxy route, and feedback paths passed their behavioral tests. |
-| R5 Redundant conditional removal | ✅ Implemented | Only the nested redundant branch was simplified; abort and non-abort feedback remain distinct. |
+| R1 The six Docker action references are immutable | ✅ Implemented | `docker/metadata-action` appears twice with `dc802804100637a589fabce1cb79ff13a1411302`; login, setup-buildx, and build-push use the exact specified SHAs. All are full 40-character references. |
+| Scope preservation | ✅ Implemented | Existing checkout and Sonar pins remain unchanged; no workflow steps were added; `sonar-project.properties` remains identity-only. |
 
 ### Coherence (Design)
 
 | Decision | Followed? | Notes |
 |---|---|---|
-| Action integrity | ✅ Yes | Full SHA pins were retained/validated; no mutable Docker or artifact action remains. |
-| Dependency lifecycle | ✅ Yes | Exactly the three Docker installs use `--ignore-scripts`. |
-| Frontend runtime | ✅ Yes | Digest-pinned unprivileged Nginx, internal 8080, external 8080, and unchanged `/api/` forwarding passed. |
-| Coverage transport | ✅ Yes, locally | Disposable-container copy-before-remove and root-path normalization passed; remote Sonar consumption is not independently observed. |
-| Reliability fix | ✅ Yes | The redundant ternary was reduced without refactoring adjacent share/download behavior. |
+| Action integrity | ✅ Yes | The four specified action families use the exact six full SHAs, including the corrected setup-buildx SHA `37fe631027851001ddb9b187196cc803df7f5f0e`. |
+| Scope control | ✅ Yes | No runtime, coverage, LCOV, artifact-transfer, or extra validation step was added; no application, package, Dockerfile, Compose/Nginx, or Sonar-property change was attributed. |
+| Structural testing strategy | ✅ Yes | Exact-reference parsing, scope comparison, YAML parsing, negative fixtures, and `git diff --check` were executed. |
 
 ### Strict TDD Compliance
 
+Strict TDD is enabled by `openspec/config.yaml`. The narrowed change is configuration-only and has no applicable production RED/GREEN cycle. However, the strict verification contract requires an explicit `TDD Cycle Evidence` table in `apply-progress.md`; no such table was found. The absence is reported as a critical process-evidence issue rather than being replaced with invented TDD evidence.
+
 | Check | Result | Details |
 |---|---|---|
-| TDD evidence reported | ✅ | `apply-progress.md` contains evidence tables for all 13 task rows, including two verification-only rows. |
-| All applicable tasks have tests/checks | ✅ | 11 implementation rows have named test/check evidence; tasks 3.3 and 3.4 are verification-only. |
-| RED confirmed | ✅ | 11/11 applicable implementation rows report and have existing test/check files; verification-only rows are N/A. |
-| GREEN confirmed | ✅ | Applicable test/check files pass in the independent reruns; verification-only coverage and diff checks pass. |
-| Triangulation adequate | ✅ | API validation/error cases, route cases, share rejection variants, runtime checks, and coverage failure fixtures exercise distinct outcomes. |
-| Safety net | ✅ | Apply evidence reports frontend/backend baseline safety checks for modified implementation areas; current reruns pass. |
+| TDD Evidence reported | ❌ | **CRITICAL** — `apply-progress.md` has no `TDD Cycle Evidence` table. |
+| All tasks have tests/checks | ✅ | 5/5 tasks have structural checks or explicit scope evidence. |
+| RED confirmed | ➖ N/A | No production behavior or applicable production test runner cycle exists. |
+| GREEN confirmed | ✅ | Structural verifier, backend tests, builds, lint, and `git diff --check` passed. |
+| Triangulation adequate | ✅ | Positive exact-reference checks plus mutable, wrong-SHA, and extra-step negative fixtures cover both spec scenarios. |
+| Safety net for modified files | ➖ N/A | No implementation or test file is modified by this narrowed change. |
 
-**TDD Compliance**: ✅ All applicable checks passed; verification-only tasks were correctly marked N/A for a production RED/GREEN cycle.
+**TDD Compliance**: 4/5 applicable protocol checks passed; the missing evidence table is critical.
 
 ### Test Layer Distribution
 
 | Layer | Tests | Files | Tools |
 |---|---:|---:|---|
-| Unit | 6 | 2 | Vitest with mocked `fetch` |
-| Integration | 8 | 2 | Vitest + Testing Library; Nest Testing + Supertest |
+| Unit | 0 | 0 | Not applicable to the configuration change |
+| Integration | 2 | 1 existing file | Node.js `node:test` with Nest Testing/Supertest |
 | E2E | 0 | 0 | Not configured |
-| **Total** | **14** | **4** | |
+| **Total** | **2** | **1** | Structural verifier is reported separately |
 
-The integration/runtime harness also exercised Docker Compose and Nginx/backend interaction; no browser E2E tool is configured.
+The two executed backend tests are existing repository baseline checks and do not cover the workflow references. The six-SHA behavior is covered by the executed structural verifier.
 
 ### Changed File Coverage
 
-| File | Line % | Branch % | Uncovered lines | Rating |
-|---|---:|---:|---|---|
-| `Front/src/components/Demo/DemoSummaryScreen.tsx` | 92.10% | 68.75% | 73, 87–89 | ✅ Acceptable |
-| `Front/src/API/Cliente/generateDemoDesign.ts` | 100% | 100% | — | ✅ Excellent |
-| `Front/src/API/Cliente/generateDemoModel.ts` | 100% | 100% | — | ✅ Excellent |
-| `backend/src/demo/demo.controller.spec.ts` | 91.11% | 77.77% | 30–31, 41–42 | ✅ Acceptable |
-
-The API production modules were not modified but are covered by the newly added tests; the backend controller file is a modified test file. The only modified production line is 100% covered.
+Coverage analysis skipped — no coverage tool is configured, and no implementation or test source file is part of this narrowed change.
 
 ### Assertion Quality
 
-✅ All 14 assertions/test cases exercise production code and verify returned values, request paths, user-visible feedback, or observable runtime behavior. No tautologies, ghost loops, smoke-only tests, or meaningless type-only assertions were found.
+No repository test file was created or modified by this narrowed change. The structural verifier used concrete workflow content, YAML parsing, exact reference comparisons, scope comparison, and rejection fixtures. No tautologies, ghost loops, smoke-only checks, or meaningless type-only assertions were found in the applicable verification logic.
+
+**Assertion quality**: ✅ All applicable assertions verify real configuration behavior.
 
 ### Quality Metrics
 
-**Linter**: ✅ No errors or warnings reported by `npm --prefix Front run lint`.  
+**Linter**: ✅ `cd Front && npm run lint` passed.  
 **Type checker/build**: ✅ Frontend and backend builds passed.  
-**Workflow linter**: ⚠️ `actionlint` is not installed; PyYAML parsing and runtime/static workflow checks passed.
+**Workflow linter**: ⚠️ `actionlint` is unavailable locally; YAML parsing and structural checks passed.
 
 ### Explicit Non-Goals Review
 
-No `README.md` change, suppression, coverage exclusion, fabricated report, legacy-smell remediation, React Three Fiber/Three.js finding change, broad refactor, or broad reverted SAST-hardening change was observed in the change-scoped implementation. The only application production source change is the in-scope `DemoSummaryScreen.tsx` conditional; the backend source change is its in-scope controller test. The current working tree also contains a pre-existing `openspec/config.yaml` modification from SDD bootstrap; it was not touched by this verification and is not attributed to this change.
+The current verification confirms that no runtime, coverage, LCOV, artifact-transfer, or extra validation step was added to `.github/workflows/ci.yml`. No application/source file, Dockerfile, Compose/Nginx file, package file, `README.md`, `openspec/config.yaml`, or `sonar-project.properties` implementation change was attributed to this SHA-only change. No remote GitHub workflow, SonarCloud analysis, Quality Gate, A rating, or remote metric is claimed.
 
 ### Issues Found
 
-**CRITICAL**: None.
+**CRITICAL**:
+
+1. Strict TDD verification cannot accept the apply evidence as complete because `openspec/changes/sonar-quality-hardening/apply-progress.md` does not contain the required `TDD Cycle Evidence` table. No issue was found in the corrected six-SHA implementation.
 
 **WARNING**:
 
-1. No remote SonarCloud workflow result was available. Actual Sonar new-code coverage, the remote Quality Gate, and the promised A ratings cannot be independently asserted; local transport and changed-line evidence pass.
-2. `actionlint` was unavailable locally, so workflow validation used YAML parsing, exact static checks, SHA/tag verification, and executed container/runtime harnesses instead.
-3. Whole-frontend aggregate coverage is 12.28% lines because the configured include scope covers untested existing application areas; the changed production line is 100% covered and `DemoSummaryScreen.tsx` is 92.10% line-covered.
-4. `openspec/config.yaml` remains modified in the working tree despite being an explicit non-goal; status/apply evidence identifies that edit as pre-existing SDD bootstrap state, and verification did not modify it.
+1. No dedicated workflow-reference test runner or coverage tool is configured; the applicable inline structural verifier passed, and no coverage/LCOV evidence is applicable to this configuration-only change.
+2. `actionlint` is unavailable locally, so workflow validation used PyYAML parsing and executed structural assertions.
+3. The frontend build reports existing chunks larger than 500 kB; this is outside the SHA-only scope.
+4. No remote SonarCloud workflow run was performed; local verification makes no remote Quality Gate or rating claim.
 
 **SUGGESTION**:
 
-1. Run the real main-branch SonarCloud workflow and retain its result before claiming the remote Quality Gate or A ratings.
-2. Consider splitting or lazy-loading the frontend chunks above 500 kB; this is an existing build warning and outside this bounded change.
+1. Add the required strict-TDD evidence table to `apply-progress.md` without broadening the change, then rerun this independent verification.
+2. Run the GitHub workflow separately if remote SonarCloud evidence is required.
 
 ### Verdict
 
 **FAIL**
 
-All locally verifiable requirements, runtime scenarios, tests, builds, security checks, and transport gates passed. Remote SonarCloud execution and its Quality Gate remain the only material verification limitation.
+The corrected SHA-only implementation and all two spec scenarios pass, but the strict TDD evidence contract is not satisfied because `apply-progress.md` lacks its required `TDD Cycle Evidence` table.
