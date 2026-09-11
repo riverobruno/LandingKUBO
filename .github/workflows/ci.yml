@@ -14,11 +14,23 @@ jobs:
       - name: Build frontend test image
         run: docker build --file Front/Dockerfile --target build --tag frontend-test Front
       - name: Run frontend tests
-        run: docker run --rm frontend-test npm run test:run
+        run: |
+          docker run --rm --volume "${GITHUB_WORKSPACE}/Front/coverage:/app/coverage" frontend-test npm run test:coverage -- --coverage.clean=false
+          sed -i 's#SF:src/#SF:Front/src/#g' "${GITHUB_WORKSPACE}/Front/coverage/lcov.info"
       - name: Build backend test image
         run: docker build --file backend/Dockerfile --target build --tag backend-test backend
       - name: Run backend tests
-        run: docker run --rm backend-test npm test
+        run: |
+          docker run --rm --volume "${GITHUB_WORKSPACE}/backend/coverage:/app/coverage" backend-test npm run test:coverage
+          sed -i 's#SF:src/#SF:backend/src/#g' "${GITHUB_WORKSPACE}/backend/coverage/lcov.info"
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: coverage-reports
+          path: |
+            Front/coverage/lcov.info
+            backend/coverage/lcov.info
+          if-no-files-found: error
 
   sonarqube:
     name: SAST con SonarQube
@@ -28,9 +40,13 @@ jobs:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Download coverage reports
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: coverage-reports
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@7006c4492b2e0ee0f816d36501671557c97f5995 # v8.1.0
-        with:
+        with:                                   
           args: >-
             -Dsonar.qualitygate.wait=true
         env:
