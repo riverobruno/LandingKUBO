@@ -33,7 +33,7 @@ function DemoSummaryScreen({ design, sketchImage, glbUrl, modelBudget, title, on
         setFeedback(summary.feedback.shareSuccess)
       } catch (error) {
         const name = error instanceof DOMException ? error.name : ''
-        setFeedback(name === 'AbortError' ? summary.feedback.shareCancelled : name === 'NotAllowedError' ? summary.feedback.shareDenied : summary.feedback.shareDenied)
+        setFeedback(name === 'AbortError' ? summary.feedback.shareCancelled : summary.feedback.shareDenied)
       }
       return
     }
