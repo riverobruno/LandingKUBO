@@ -1,4 +1,4 @@
-
+import { observeBackendResponse } from '@/observability'
 export interface DemoDesignRequest {
   prompt: string
 }
@@ -51,6 +51,7 @@ export async function generateDemoDesign(request: DemoDesignRequest): Promise<De
   const params = new URLSearchParams({ prompt: request.prompt })
 
   const response = await fetch(`/api/demo/design?${params.toString()}`)
+  observeBackendResponse(response)
   if (!response.ok) {
     throw new Error(`Failed to generate demo design: ${response.status}`)
   }
