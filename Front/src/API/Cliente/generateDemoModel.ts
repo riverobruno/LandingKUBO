@@ -1,4 +1,4 @@
-
+import { observeBackendResponse } from '@/observability'
 export interface DemoModelRequest {
   name: string
   image2D: string
@@ -52,6 +52,7 @@ export async function generateDemoModel(request: DemoModelRequest): Promise<Demo
   const params = new URLSearchParams({ name: request.name })
 
   const response = await fetch(`/api/demo/model?${params.toString()}`)
+  observeBackendResponse(response)
   if (!response.ok) {
     throw new Error(`Failed to generate demo model: ${response.status}`)
   }

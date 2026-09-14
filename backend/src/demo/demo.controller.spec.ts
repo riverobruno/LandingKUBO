@@ -4,6 +4,7 @@ import request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { AppModule } from '../app.module';
+import { getNodeName } from '../node-name';
 import { RedisService } from '../redis/redis.service';
 
 describe('DemoController', () => {
@@ -31,9 +32,21 @@ describe('DemoController', () => {
     await request(app.getHttpServer())
       .get('/demo/design')
       .expect(200)
+      .expect('X-Backend-Node', getNodeName())
       .expect(({ body }) => {
         if (body.name !== 'Placard' || body.measurements.length !== 3) {
           throw new Error('Unexpected demo design response');
+        }
+      });
+  });
+
+  it('should expose an independent health endpoint', async () => {
+    await request(app.getHttpServer())
+      .get('/health')
+      .expect(200)
+      .expect(({ body }) => {
+        if (body.status !== 'ok' || typeof body.nodeName !== 'string') {
+          throw new Error('Unexpected health response');
         }
       });
   });

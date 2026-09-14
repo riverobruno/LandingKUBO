@@ -39,3 +39,7 @@ docker compose stop backend-1
 Después de detener `backend-1`, repetí la acción de la demo: Nginx debe derivar la petición a otra réplica. 
 
 El agregador de estadísticas necesita acceso de solo lectura al socket de Docker (`/var/run/docker.sock`); por eso esta configuración está pensada para una demostración local.
+Landing page de KUBO con herramientas DevOps. Rama de replicación y reverse proxy.
+
+
+
