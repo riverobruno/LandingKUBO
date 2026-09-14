@@ -120,6 +120,8 @@ services:
 
   stats-aggregator:
     build: ./stats-aggregator
+    security_opt:
+      - label=disable
     expose:
       - "3000"
     volumes:
