@@ -1,25 +1,158 @@
 services:
-  backend:
+  backend-1:
     build: ./backend
-    ports:
-      - "3000:3000"
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
+      NODE_NAME: backend-1
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    expose:
+      - "3000"
     depends_on:
-      - redis
+      redis:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
 
-  frontend:
-    build:
-      context: ./Front
-    ports:
-      - "8080:8080"
+  backend-2:
+    build: ./backend
     environment:
-      - BACKEND_UPSTREAM=http://backend:3000
+      NODE_NAME: backend-2
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    expose:
+      - "3000"
     depends_on:
-      - backend
+      redis:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  backend-3:
+    build: ./backend
+    environment:
+      NODE_NAME: backend-3
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    expose:
+      - "3000"
+    depends_on:
+      redis:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  frontend-1:
+    build: ./Front
+    environment:
+      NODE_NAME: frontend-1
+    expose:
+      - "8080"
+    depends_on:
+      backend-1:
+        condition: service_healthy
+      backend-2:
+        condition: service_healthy
+      backend-3:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "--quiet", "http://127.0.0.1:8080/"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+  frontend-2:
+    build: ./Front
+    environment:
+      NODE_NAME: frontend-2
+    expose:
+      - "8080"
+    depends_on:
+      backend-1:
+        condition: service_healthy
+      backend-2:
+        condition: service_healthy
+      backend-3:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "--quiet", "http://127.0.0.1:8080/"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+  frontend-3:
+    build: ./Front
+    environment:
+      NODE_NAME: frontend-3
+    expose:
+      - "8080"
+    depends_on:
+      backend-1:
+        condition: service_healthy
+      backend-2:
+        condition: service_healthy
+      backend-3:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "--quiet", "http://127.0.0.1:8080/"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
 
   redis:
     image: redis:7-alpine
+    expose:
+      - "6379"
+
+  stats-aggregator:
+    build: ./stats-aggregator
+    expose:
+      - "3000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+  reverse-proxy:
+    build: ./reverse-proxy
     ports:
-      - "6379:6379"
+      - "8080:8080"
+    depends_on:
+      frontend-1:
+        condition: service_healthy
+      frontend-2:
+        condition: service_healthy
+      frontend-3:
+        condition: service_healthy
+      backend-1:
+        condition: service_healthy
+      backend-2:
+        condition: service_healthy
+      backend-3:
+        condition: service_healthy
+      stats-aggregator:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "--quiet", "http://127.0.0.1:8080/"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
