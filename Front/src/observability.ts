@@ -6,12 +6,15 @@ export interface NodeStats {
   memory: { usageBytes: number; limitBytes: number; percent: number | null } | null
 }
 
+export const BACKEND_NODES = ['backend-1', 'backend-2', 'backend-3'] as const
+export type BackendNode = typeof BACKEND_NODES[number]
+
+export function isBackendNode(value: string): value is BackendNode {
+  return BACKEND_NODES.includes(value as BackendNode)
+}
+
 const backendNodeEvent = new EventTarget()
 let latestBackendNode: string | null = null
-
-export function getFrontendNodeName() {
-  return window.__NODE_NAME__?.trim() || 'frontend-dev'
-}
 
 export function getLatestBackendNode() {
   return latestBackendNode
@@ -19,7 +22,7 @@ export function getLatestBackendNode() {
 
 export function observeBackendResponse(response: Response) {
   const nodeName = response.headers.get('X-Backend-Node')?.trim()
-  if (!nodeName) return
+  if (!nodeName || !isBackendNode(nodeName)) return
 
   latestBackendNode = nodeName
   backendNodeEvent.dispatchEvent(new CustomEvent('backend-node', { detail: nodeName }))
@@ -40,6 +43,10 @@ function isNodeStats(value: unknown): value is NodeStats {
 }
 
 export async function fetchNodeStats(nodeName: string): Promise<NodeStats> {
+  if (!isBackendNode(nodeName)) {
+    throw new Error(`Invalid backend node: ${nodeName}`)
+  }
+
   const response = await fetch(`/stats/${encodeURIComponent(nodeName)}`)
   const data: unknown = await response.json().catch(() => null)
   if (!response.ok || !isNodeStats(data)) {

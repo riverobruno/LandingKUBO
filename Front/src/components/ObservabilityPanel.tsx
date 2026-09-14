@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react'
 import {
+  BACKEND_NODES,
   fetchNodeStats,
-  getFrontendNodeName,
   getLatestBackendNode,
   subscribeToBackendNode,
   type NodeStats,
 } from '@/observability'
-
-const frontendNodes = ['frontend-1', 'frontend-2', 'frontend-3']
-const backendNodes = ['backend-1', 'backend-2', 'backend-3']
 
 function formatBytes(bytes: number) {
   if (!Number.isFinite(bytes) || bytes <= 0) return 'n/d'
@@ -39,9 +36,7 @@ function StatusRow({ stats }: { stats: NodeStats }) {
 }
 
 function ObservabilityPanel() {
-  const frontendNode = getFrontendNodeName()
   const [backendNode, setBackendNode] = useState(getLatestBackendNode())
-  const [frontendStats, setFrontendStats] = useState<NodeStats | null>(null)
   const [backendStats, setBackendStats] = useState<NodeStats | null>(null)
   const [otherStats, setOtherStats] = useState<NodeStats[]>([])
   const [showOthers, setShowOthers] = useState(false)
@@ -53,13 +48,17 @@ function ObservabilityPanel() {
     let active = true
 
     async function refreshCurrent() {
-      const [frontend, backend] = await Promise.allSettled([
-        fetchNodeStats(frontendNode),
-        backendNode ? fetchNodeStats(backendNode) : Promise.resolve(null),
-      ])
-      if (!active) return
-      setFrontendStats(frontend.status === 'fulfilled' ? frontend.value : null)
-      setBackendStats(backend.status === 'fulfilled' ? backend.value : null)
+      if (!backendNode) {
+        setBackendStats(null)
+        return
+      }
+
+      try {
+        const stats = await fetchNodeStats(backendNode)
+        if (active) setBackendStats(stats)
+      } catch {
+        if (active) setBackendStats(null)
+      }
     }
 
     void refreshCurrent()
@@ -68,12 +67,12 @@ function ObservabilityPanel() {
       active = false
       window.clearInterval(timer)
     }
-  }, [backendNode, frontendNode])
+  }, [backendNode])
 
   useEffect(() => {
     if (!showOthers) return
     let active = true
-    const nodes = [...frontendNodes, ...backendNodes].filter((node) => node !== frontendNode && node !== backendNode)
+    const nodes = BACKEND_NODES.filter((node) => node !== backendNode)
 
     async function refreshOthers() {
       const results = await Promise.all(nodes.map(async (node) => {
@@ -92,7 +91,7 @@ function ObservabilityPanel() {
       active = false
       window.clearInterval(timer)
     }
-  }, [backendNode, frontendNode, showOthers])
+  }, [backendNode, showOthers])
 
   useEffect(() => {
     function move(event: PointerEvent) {
@@ -132,8 +131,6 @@ function ObservabilityPanel() {
         <div className="space-y-1">
           <div className="flex justify-between gap-3"><span>Backend que respondió</span><strong>{backendNode || 'sin respuesta'}</strong></div>
           <div className="flex justify-between gap-3 text-stone-600"><span>CPU · RAM</span><Metric stats={backendStats} /></div>
-          <div className="flex justify-between gap-3"><span>Frontend actual</span><strong>{frontendNode}</strong></div>
-          <div className="flex justify-between gap-3 text-stone-600"><span>CPU · RAM</span><Metric stats={frontendStats} /></div>
         </div>
         <button
           type="button"
