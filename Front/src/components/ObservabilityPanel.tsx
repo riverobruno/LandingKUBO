@@ -37,44 +37,16 @@ function StatusRow({ stats }: { stats: NodeStats }) {
 
 function ObservabilityPanel() {
   const [backendNode, setBackendNode] = useState(getLatestBackendNode())
-  const [backendStats, setBackendStats] = useState<NodeStats | null>(null)
-  const [otherStats, setOtherStats] = useState<NodeStats[]>([])
-  const [showOthers, setShowOthers] = useState(false)
+  const [backendStats, setBackendStats] = useState<NodeStats[]>([])
   const [position, setPosition] = useState({ x: 0, y: 0 })
 
   useEffect(() => subscribeToBackendNode(setBackendNode), [])
 
   useEffect(() => {
     let active = true
+    const nodes = BACKEND_NODES
 
-    async function refreshCurrent() {
-      if (!backendNode) {
-        setBackendStats(null)
-        return
-      }
-
-      try {
-        const stats = await fetchNodeStats(backendNode)
-        if (active) setBackendStats(stats)
-      } catch {
-        if (active) setBackendStats(null)
-      }
-    }
-
-    void refreshCurrent()
-    const timer = window.setInterval(() => void refreshCurrent(), 5000)
-    return () => {
-      active = false
-      window.clearInterval(timer)
-    }
-  }, [backendNode])
-
-  useEffect(() => {
-    if (!showOthers) return
-    let active = true
-    const nodes = BACKEND_NODES.filter((node) => node !== backendNode)
-
-    async function refreshOthers() {
+    async function refreshBackendStats() {
       const results = await Promise.all(nodes.map(async (node) => {
         try {
           return await fetchNodeStats(node)
@@ -82,16 +54,16 @@ function ObservabilityPanel() {
           return { nodeName: node, status: 'down', health: 'unknown', cpu: null, memory: null } as NodeStats
         }
       }))
-      if (active) setOtherStats(results)
+      if (active) setBackendStats(results)
     }
 
-    void refreshOthers()
-    const timer = window.setInterval(() => void refreshOthers(), 5000)
+    void refreshBackendStats()
+    const timer = window.setInterval(() => void refreshBackendStats(), 3000)
     return () => {
       active = false
       window.clearInterval(timer)
     }
-  }, [backendNode, showOthers])
+  }, [backendNode])
 
   useEffect(() => {
     function move(event: PointerEvent) {
@@ -124,27 +96,15 @@ function ObservabilityPanel() {
       aria-label="Panel de observabilidad"
     >
       <div id="observability-panel-handle" className="cursor-grab border-b border-stone-200 px-4 py-3 active:cursor-grabbing" style={{ touchAction: 'none' }}>
-        <p className="m-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-500">Demo de resiliencia</p>
-        <p className="m-0 mt-1 text-sm font-semibold">Observabilidad en vivo</p>
+        <p className="m-0 text-sm font-semibold">En vivo</p>
       </div>
       <div className="space-y-3 px-4 py-3 text-xs">
         <div className="space-y-1">
           <div className="flex justify-between gap-3"><span>Backend que respondió</span><strong>{backendNode || 'sin respuesta'}</strong></div>
-          <div className="flex justify-between gap-3 text-stone-600"><span>CPU · RAM</span><Metric stats={backendStats} /></div>
         </div>
-        <button
-          type="button"
-          className="w-full border-t border-stone-200 pt-3 text-left text-xs font-semibold lowercase text-stone-700 hover:text-stone-950"
-          onClick={() => setShowOthers((current) => !current)}
-          aria-expanded={showOthers}
-        >
-          ver estado de los demas contenedores
-        </button>
-        {showOthers && (
-          <ul className="m-0 max-h-52 list-none overflow-y-auto p-0">
-            {otherStats.map((stats) => <StatusRow key={stats.nodeName} stats={stats} />)}
-          </ul>
-        )}
+        <ul className="m-0 max-h-52 list-none overflow-y-auto border-t border-stone-200 p-0">
+          {backendStats.map((stats) => <StatusRow key={stats.nodeName} stats={stats} />)}
+        </ul>
       </div>
     </aside>
   )
