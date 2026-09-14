@@ -38,9 +38,26 @@ function StatusRow({ stats }: { stats: NodeStats }) {
 function ObservabilityPanel() {
   const [backendNode, setBackendNode] = useState(getLatestBackendNode())
   const [backendStats, setBackendStats] = useState<NodeStats[]>([])
+  const [overloadedNode, setOverloadedNode] = useState<string | null>(null)
+  const [isOverloading, setIsOverloading] = useState(false)
+  const [overloadError, setOverloadError] = useState(false)
   const [position, setPosition] = useState({ x: 0, y: 0 })
 
   useEffect(() => subscribeToBackendNode(setBackendNode), [])
+
+  async function overloadBackend() {
+    setIsOverloading(true)
+    setOverloadError(false)
+    try {
+      const response = await fetch('/api/sobrecargar', { method: 'POST' })
+      if (!response.ok) throw new Error('Failed to overload backend')
+      setOverloadedNode(response.headers.get('X-Backend-Node') || 'desconocida')
+    } catch {
+      setOverloadError(true)
+    } finally {
+      setIsOverloading(false)
+    }
+  }
 
   useEffect(() => {
     let active = true
@@ -99,12 +116,25 @@ function ObservabilityPanel() {
         <p className="m-0 text-sm font-semibold">En vivo</p>
       </div>
       <div className="space-y-3 px-4 py-3 text-xs">
-        <div className="space-y-1">
-          <div className="flex justify-between gap-3"><span>Backend que respondió</span><strong>{backendNode || 'sin respuesta'}</strong></div>
-        </div>
+        <div className="flex justify-between gap-3"><span>Backend que respondió</span><strong>{backendNode || 'sin respuesta'}</strong></div>
         <ul className="m-0 max-h-52 list-none overflow-y-auto border-t border-stone-200 p-0">
           {backendStats.map((stats) => <StatusRow key={stats.nodeName} stats={stats} />)}
         </ul>
+        <div className="space-y-2">
+          <button
+            type="button"
+            className="w-full rounded-lg bg-red-700 px-3 py-2 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+            disabled={isOverloading}
+            onClick={() => void overloadBackend()}
+          >
+            {isOverloading ? 'Sobrecargando…' : 'Sobrecargar'}
+          </button>
+          <p className={overloadError ? 'text-red-700' : 'text-stone-600'} aria-live="polite">
+            {overloadError
+              ? 'No se pudo sobrecargar la instancia.'
+              : overloadedNode && `Instancia sobrecargada: ${overloadedNode}`}
+          </p>
+        </div>
       </div>
     </aside>
   )
