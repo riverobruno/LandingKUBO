@@ -36,6 +36,7 @@ function StatusRow({ stats }: { stats: NodeStats }) {
 }
 
 function ObservabilityPanel() {
+  const [isExpanded, setIsExpanded] = useState(true)
   const [backendNode, setBackendNode] = useState(getLatestBackendNode())
   const [backendStats, setBackendStats] = useState<NodeStats[]>([])
   const [overloadedNode, setOverloadedNode] = useState<string | null>(null)
@@ -108,14 +109,26 @@ function ObservabilityPanel() {
 
   return (
     <aside
-      className="fixed right-4 top-4 z-[100] w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-stone-300/80 bg-[#fffaf3]/95 text-stone-900 shadow-2xl backdrop-blur"
+      className={`fixed right-4 top-4 z-[100] ${isExpanded ? 'w-[min(22rem,calc(100vw-2rem))]' : 'w-fit max-w-[calc(100vw-2rem)]'} overflow-hidden rounded-2xl border border-stone-300/80 bg-[#fffaf3]/95 text-stone-900 shadow-2xl backdrop-blur`}
       style={{ transform: `translate(${position.x}px, ${position.y}px)` }}
       aria-label="Panel de observabilidad"
     >
-      <div id="observability-panel-handle" className="cursor-grab border-b border-stone-200 px-4 py-3 active:cursor-grabbing" style={{ touchAction: 'none' }}>
-        <p className="m-0 text-sm font-semibold">En vivo</p>
+      <div className={`flex items-center ${isExpanded ? 'border-b border-stone-200' : ''}`}>
+        <div id="observability-panel-handle" hidden={!isExpanded} className="min-w-0 flex-1 cursor-grab px-4 py-3 active:cursor-grabbing" style={{ touchAction: 'none' }}>
+          <p className="m-0 text-sm font-semibold">En vivo</p>
+        </div>
+        <button
+          type="button"
+          className="min-h-11 rounded-xl px-4 py-3 text-xs font-semibold hover:bg-stone-200/60 focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-stone-700"
+          aria-label={isExpanded ? 'Minimize container information' : 'Expand container information'}
+          aria-expanded={isExpanded}
+          aria-controls="observability-panel-content"
+          onClick={() => setIsExpanded((expanded) => !expanded)}
+        >
+          {isExpanded ? 'Minimize' : 'Container info'}
+        </button>
       </div>
-      <div className="space-y-3 px-4 py-3 text-xs">
+      <div id="observability-panel-content" hidden={!isExpanded} className="space-y-3 px-4 py-3 text-xs">
         <div className="flex justify-between gap-3"><span>Backend que respondió</span><strong>{backendNode || 'sin respuesta'}</strong></div>
         <ul className="m-0 max-h-52 list-none overflow-y-auto border-t border-stone-200 p-0">
           {backendStats.map((stats) => <StatusRow key={stats.nodeName} stats={stats} />)}
