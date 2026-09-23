@@ -1,3 +1,7 @@
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=riverobruno_LandingKUBO&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=riverobruno_LandingKUBO)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=riverobruno_LandingKUBO&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=riverobruno_LandingKUBO)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=riverobruno_LandingKUBO&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=riverobruno_LandingKUBO)
+
 # LandingKUBO
 Landing page de KUBO con herramientas DevOps.
 
