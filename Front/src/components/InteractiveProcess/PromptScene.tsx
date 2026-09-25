@@ -55,6 +55,7 @@ function PromptScene({
   const inputIsAccessible = inputProgress > 0.05 && promptContentOpacity > 0.05
   const controlsAreInteractive = inputProgress >= 1 && promptContentOpacity >= 0.999
   const copyContrastOpacity = Math.max(titleProgress, subtitleProgress) * copyOpacity
+  const sceneClassName = `absolute inset-0 z-20 overflow-hidden text-white ${isAccessible ? '' : 'pointer-events-none'}`
 
   useLayoutEffect(() => {
     const inputLayout = inputLayoutRef.current
@@ -96,7 +97,7 @@ function PromptScene({
   return (
     <section
       ref={sceneRef}
-      className="absolute inset-0 z-20 overflow-hidden text-white"
+      className={sceneClassName}
       aria-labelledby="prompt-scene-title"
       aria-hidden={!isAccessible}
       inert={!isAccessible}

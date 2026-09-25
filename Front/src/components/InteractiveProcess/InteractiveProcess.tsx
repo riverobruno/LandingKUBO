@@ -187,6 +187,8 @@ function InteractiveProcess() {
   const modelNarrativeProgress = modelOpacity
   const sketchOpacity = modelReady ? 1 - modelRevealProgress : 1
   const modelIsVisible = modelReady && modelOpacity > 0.05
+  const promptSceneImageClassName =
+    'pointer-events-none absolute inset-0 z-10 size-full object-cover'
   const modelIsInteractive = modelReady && progress >= ranges.finalHold[0]
   const shouldLoadModel = progress >= ranges.technicalHold[0]
   const deskLayout = promptInputBounds
@@ -227,7 +229,7 @@ function InteractiveProcess() {
           isHidden={heroContentOpacity <= 0.05}
         />
         <img
-          className="absolute inset-0 z-10 size-full object-cover"
+          className={promptSceneImageClassName}
           src={promptSceneImage}
           alt=""
           aria-hidden="true"
