@@ -1,5 +1,6 @@
 import heroImage from '@/assets/hero.png'
 import { ArrowDown, ArrowRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 interface HeroProps {
   contentOpacity: number
@@ -45,13 +46,12 @@ function Hero({ contentOpacity, exitProgress, isHidden }: HeroProps) {
               KUBO te ayuda a transformar tus ideas
               <br className="hidden sm:block" /> en un diseño 3D y lo lleva hasta sus piezas.
             </p>
-            <a
+            <Link
               className="mt-8 inline-flex items-center gap-5 rounded-full border border-white/90 px-6 py-3.5 text-sm font-medium outline-none transition-colors hover:bg-white hover:text-stone-900 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-4 focus-visible:ring-offset-transparent sm:mt-10 sm:px-7 sm:py-4 sm:text-base"
-              href="#demo"
-            >
+              to="/demo">
               Diseñar con KUBO
               <ArrowRight aria-hidden="true" size={19} strokeWidth={1.6} />
-            </a>
+            </Link>
           </div>
         </div>
 

@@ -227,7 +227,7 @@ function InteractiveProcess() {
           isHidden={heroContentOpacity <= 0.05}
         />
         <img
-          className="absolute inset-0 z-10 size-full object-cover"
+          className="pointer-events-none absolute inset-0 z-10 size-full object-cover"
           src={promptSceneImage}
           alt=""
           aria-hidden="true"

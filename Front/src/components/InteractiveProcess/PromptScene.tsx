@@ -96,7 +96,7 @@ function PromptScene({
   return (
     <section
       ref={sceneRef}
-      className="absolute inset-0 z-20 overflow-hidden text-white"
+      className={`absolute inset-0 z-20 overflow-hidden text-white ${isAccessible ? '' : 'pointer-events-none'}`}
       aria-labelledby="prompt-scene-title"
       aria-hidden={!isAccessible}
       inert={!isAccessible}
