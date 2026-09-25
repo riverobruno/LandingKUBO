@@ -1,5 +1,7 @@
 import InteractiveProcess from '@/components/InteractiveProcess/InteractiveProcess'
 
+const contactNames = ['Joaquín', 'Yoel', 'Martín', 'Valentino', 'Bruno']
+
 function Home() {
   return (
     <main>
@@ -14,11 +16,9 @@ function Home() {
             Contacto
           </h2>
           <ul className="mt-8 grid gap-4 text-lg sm:grid-cols-2 sm:text-xl lg:grid-cols-5">
-            <li>Joaquín</li>
-            <li>Yoel</li>
-            <li>Martín</li>
-            <li>Valentino</li>
-            <li>Bruno</li>
+            {contactNames.map((name) => (
+              <li key={name}>{name}</li>
+            ))}
           </ul>
         </div>
       </section>

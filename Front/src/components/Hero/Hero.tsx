@@ -10,6 +10,7 @@ interface HeroProps {
 
 const linkFocus =
   'rounded-sm outline-none transition-opacity hover:opacity-75 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-4 focus-visible:ring-offset-transparent'
+const demoRoute = '/demo'
 
 function Hero({ contentOpacity, exitProgress, isHidden }: HeroProps) {
   return (
@@ -48,7 +49,7 @@ function Hero({ contentOpacity, exitProgress, isHidden }: HeroProps) {
             </p>
             <Link
               className="mt-8 inline-flex items-center gap-5 rounded-full border border-white/90 px-6 py-3.5 text-sm font-medium outline-none transition-colors hover:bg-white hover:text-stone-900 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-4 focus-visible:ring-offset-transparent sm:mt-10 sm:px-7 sm:py-4 sm:text-base"
-              to="/demo">
+              to={demoRoute}>
               Diseñar con KUBO
               <ArrowRight aria-hidden="true" size={19} strokeWidth={1.6} />
             </Link>
